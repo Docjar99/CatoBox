@@ -1,10 +1,9 @@
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-
+import Octicons from '@expo/vector-icons/Octicons';
 
 export const HomeIcon=(props)=>{
-    <FontAwesome5 name="home" size={24} color="black" {... props}/>
+<Octicons name="home" size={24} color="black" />
 };
 
 export const CircleInfoIcon=(props)=>{
-    <FontAwesome5 name="info-circle" size={24} color="black" {... props}/>
+<Octicons name="info" size={24} color="black" />
 };
