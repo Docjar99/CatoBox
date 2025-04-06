@@ -1,9 +1,9 @@
 import { Button } from "react-native"
 
-export function ButtonL(){
+export function ButtonR(){
     return(
-        <Button 
-            title="Iniciar sesion"
+        <Button
+            title="Registrarse"
         
         />
     )

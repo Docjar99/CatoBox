@@ -6,14 +6,12 @@ import { ButtonL } from "./ButtonL";
 export function Login(){
     return(
         <Screen>
-        <Text>Login</Text>
-        <Text>Ingrese su correo</Text>
+        <Text>Inicio de sesion</Text>
         <TextInput
-            placeholder="email"
+            placeholder="Correo electronico"
         />
-        <Text>Ingrese su contraseña</Text>
         <TextInput
-            placeholder="contraseña"
+            placeholder="Contraseña"
             secureTextEntry
         />
         <ButtonL />
