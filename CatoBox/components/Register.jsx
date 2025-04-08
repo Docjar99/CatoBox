@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 import { Screen } from "./Screen";
-import { TextInput } from "react-native-web";
+import { TextInput } from "react-native";
 import {ButtonR} from "./ButtonR";
 import { Link } from "expo-router";
 export function Register(){
