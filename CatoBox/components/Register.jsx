@@ -1,26 +1,28 @@
-import { Text } from "react-native";
+import { Text, TextInput, StyleSheet, View } from "react-native";
 import { Screen } from "./Screen";
-import { TextInput } from "react-native";
 import {ButtonR} from "./ButtonR";
 import { Link } from "expo-router";
 export function Register(){
     return(
         <Screen>
-            <Text>Registro de estudiante</Text>
-            <TextInput
-                placeholder="Nombre Completo"
-            
-            />
-            <TextInput
-                placeholder="Correo electronico"
-            
-            />
-            <TextInput
-                placeholder="Contraseña"
-            
-            />
-            <Text>Combobox</Text>
-            <Text>Checbox</Text>
+            <Text style = {styles.header}>Registro de estudiante</Text>
+            <View style={styles.container}>
+                <TextInput style = {styles.txt}
+                    placeholder="Nombre Completo"
+                
+                />
+                <TextInput style = {styles.txt}
+                    placeholder="Correo electronico"
+                
+                />
+                <TextInput style = {styles.txt}
+                    placeholder="Contraseña"
+                
+                />
+                <Text>Combobox</Text>
+                <Text>Checbox</Text>
+            </View>
+
 
             <ButtonR />
             <Link href={""}>¿Ya tienes una cuenta?</Link>
@@ -29,3 +31,24 @@ export function Register(){
         </Screen>
     );
 }
+const styles = StyleSheet.create({
+    container:{
+        //margin:'10px',
+        
+    },
+    header: {
+        textAlign: 'center',
+        //fontSize:'20px',
+        fontWeight: 'bold',
+    },
+    txt:{
+        //fontsize: '15px',
+        textAlign: 'center',
+        //borderRadius: '20px',
+        borderColor:'#96ff64',
+        borderWidth:4,
+        margin:10,
+    },
+
+
+}) 

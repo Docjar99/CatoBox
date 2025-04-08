@@ -26,18 +26,18 @@ export function Login(){
 }
 const styles = StyleSheet.create({
     container:{
-        margin:'10px',
+        //margin:'10px',
         
     },
     header: {
         textAlign: 'center',
-        fontSize:'20px',
+        //fontSize:'20px',
         fontWeight: 'bold',
     },
     txt:{
-        fontsize: '15px',
+        //fontsize: '15px',
         textAlign: 'center',
-        borderRadius: '20px',
+        //borderRadius: '20px',
         borderColor:'#96ff64',
         borderWidth:4,
         margin:10,
