@@ -5,27 +5,30 @@ import { Link } from "expo-router";
 export function Register(){
     return(
         <Screen>
-            <Text style = {styles.header}>Registro de estudiante</Text>
             <View style={styles.container}>
-                <TextInput style = {styles.txt}
-                    placeholder="Nombre Completo"
-                
-                />
-                <TextInput style = {styles.txt}
-                    placeholder="Correo electronico"
-                
-                />
-                <TextInput style = {styles.txt}
-                    placeholder="Contraseña"
-                
-                />
-                <Text>Combobox</Text>
-                <Text>Checbox</Text>
+                <Text style = {styles.encabezado}>Registro de estudiante</Text>
+                <View style={styles.register}>
+                    <TextInput style = {styles.txt}
+                        placeholder="Nombre Completo"
+                    
+                    />
+                    <TextInput style = {styles.txt}
+                        placeholder="Correo electronico"
+                    
+                    />
+                    <TextInput style = {styles.txt}
+                        placeholder="Contraseña"
+                    
+                    />
+                    <Text>Combobox</Text>
+                    <Text>Checbox</Text>
+                </View>
+
+
+                <ButtonR />
+                <Link href={""}>¿Ya tienes una cuenta?</Link>
             </View>
-
-
-            <ButtonR />
-            <Link href={""}>¿Ya tienes una cuenta?</Link>
+           
 
 
         </Screen>
@@ -33,13 +36,17 @@ export function Register(){
 }
 const styles = StyleSheet.create({
     container:{
-        //margin:'10px',
+        padding: 16,
+        flex:1,
         
     },
-    header: {
-        textAlign: 'center',
-        //fontSize:'20px',
-        fontWeight: 'bold',
+    encabezado: {
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    register:{
+        margin:16,
     },
     txt:{
         //fontsize: '15px',

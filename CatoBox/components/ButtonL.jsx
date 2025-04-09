@@ -5,7 +5,6 @@ export function ButtonL(){
         <Button
             title="Iniciar sesion"
             color='black'
-            borderRadius='222px'
             onPress={() => Alert.alert('Inicio de sesión exitoso')}
         />
     );
