@@ -2,6 +2,7 @@ import { Text, TextInput, StyleSheet, View } from "react-native";
 import { Screen } from "./Screen";
 import {ButtonR} from "./ButtonR";
 import { Link } from "expo-router";
+import { EyeClosedIcon } from "./Icons";
 export function Register(){
     return(
         <Screen>
@@ -9,7 +10,11 @@ export function Register(){
                 <Text style = {styles.encabezado}>Registro de estudiante</Text>
                 <View style={styles.register}>
                     <TextInput style = {styles.txt}
-                        placeholder="Nombre Completo"
+                        placeholder="Apellidos"
+                    
+                    />
+                    <TextInput style = {styles.txt}
+                        placeholder="Nombres"
                     
                     />
                     <TextInput style = {styles.txt}
@@ -18,7 +23,11 @@ export function Register(){
                     />
                     <TextInput style = {styles.txt}
                         placeholder="Contraseña"
-                    
+                        secureTextEntry
+                    />
+                    <TextInput style = {styles.txt}
+                        placeholder="Confirmar contraseña"
+                        secureTextEntry
                     />
                     <Text>Combobox</Text>
                     <Text>Checbox</Text>

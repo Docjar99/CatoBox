@@ -1,7 +1,7 @@
 import { Platform, StyleSheet } from "react-native";
 import { Tabs } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { HomeIcon, CircleInfoIcon } from "../../components/Icons";
+import { HomeIcon, CircleInfoIcon, ForoIcon, ConfigIcon } from "../../components/Icons";
 
 export default function TabsLayout() {
     // Get safe area insets to handle notches and home indicators
@@ -59,7 +59,7 @@ export default function TabsLayout() {
                 name="foro"
                 options={{
                     title: "Foro",
-                    tabBarIcon: ({color}) => <CircleInfoIcon color={color} />,
+                    tabBarIcon: ({color}) => <ForoIcon color={color} />,
                 }}
             />
             <Tabs.Screen
@@ -74,6 +74,13 @@ export default function TabsLayout() {
                 options={{
                     title: "Register",
                     tabBarIcon: ({color}) => <CircleInfoIcon color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="userinfo"
+                options={{
+                    title: "Configuración",
+                    tabBarIcon: ({color}) => <ConfigIcon color={color} />,
                 }}
             />
 
