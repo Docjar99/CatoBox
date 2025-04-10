@@ -4,7 +4,7 @@ import {ButtonR} from "./ButtonR";
 import { Link } from "expo-router";
 import { EyeClosedIcon } from "./Icons";
 import { Picker } from "@react-native-picker/picker";
-import { CheckBoxx } from "./CheckBox";
+import { CheckBoxx } from "./CheckBoxx";
 
 export function Register(){
     return(
@@ -33,21 +33,25 @@ export function Register(){
                         secureTextEntry
                     />
                     <Picker
-                        testID="carrera"
-                        accessibilityLabel="Selecciona tu carrera"  
+                        style={styles.listContainer}
+                        
                     >
+                        <Picker.Item label="Seleciona tu carrera" enabled = "false" />
                         <Picker.Item label="Chistemas" value="java" />
                         <Picker.Item label="Medicina" value="js" />
-                    </Picker>
-                    <Link href={""}> 
-                    <Text style={styles.link}> Acepta los términos y condiciones </Text>
-                    </Link>
-                </View>
+                        <Picker.Item label="Chistemas" value="java" />
+                        <Picker.Item label="Medicina" value="js" />
+                        <Picker.Item label="Chistemas" value="java" />
+                        <Picker.Item label="Medicina" value="js" />
 
+                    </Picker>
+
+                </View>
+                <CheckBoxx />
                 <ButtonR />
 
-                <Link href={""} >
-                <Text style={styles.link}>¿Ya tienes una cuenta?</Text>
+                <Link href={""} style={styles.linkContainer} >
+                    <Text style={styles.link}>¿Ya tienes una cuenta?</Text>
                 </Link>
             </View>
            
@@ -80,8 +84,14 @@ const styles = StyleSheet.create({
         margin:10,
         
     },
+    listContainer:{
+        marginTop:12,
+    },
+    linkContainer:{
+        marginTop:12,
+
+    },
     link:{
-        textDecorationLine:'underline',
         color:'blue',
     }
 
