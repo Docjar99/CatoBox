@@ -3,6 +3,9 @@ import { Screen } from "./Screen";
 import {ButtonR} from "./ButtonR";
 import { Link } from "expo-router";
 import { EyeClosedIcon } from "./Icons";
+import { Picker } from "@react-native-picker/picker";
+import { CheckBoxx } from "./CheckBox";
+
 export function Register(){
     return(
         <Screen>
@@ -29,13 +32,23 @@ export function Register(){
                         placeholder="Confirmar contraseña"
                         secureTextEntry
                     />
-                    <Text>Combobox</Text>
-                    <Text>Checbox</Text>
+                    <Picker
+                        testID="carrera"
+                        accessibilityLabel="Selecciona tu carrera"  
+                    >
+                        <Picker.Item label="Chistemas" value="java" />
+                        <Picker.Item label="Medicina" value="js" />
+                    </Picker>
+                    <Link href={""}> 
+                    <Text style={styles.link}> Acepta los términos y condiciones </Text>
+                    </Link>
                 </View>
 
                 <ButtonR />
 
-                <Link href={""}>¿Ya tienes una cuenta?</Link>
+                <Link href={""} >
+                <Text style={styles.link}>¿Ya tienes una cuenta?</Text>
+                </Link>
             </View>
            
 
@@ -65,7 +78,11 @@ const styles = StyleSheet.create({
         borderBottomColor:'grey',
         borderBottomWidth:2,
         margin:10,
+        
     },
-
+    link:{
+        textDecorationLine:'underline',
+        color:'blue',
+    }
 
 }) 

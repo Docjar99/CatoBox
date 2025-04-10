@@ -17,7 +17,6 @@ export function ButtonR(){
 }
 const styles = StyleSheet.create({
     button:{
-
         width:150,
     },
 })
