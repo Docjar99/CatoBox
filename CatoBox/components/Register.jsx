@@ -24,8 +24,8 @@ export function Register(){
                     <Text>Checbox</Text>
                 </View>
 
-
                 <ButtonR />
+
                 <Link href={""}>¿Ya tienes una cuenta?</Link>
             </View>
            
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     container:{
         padding: 16,
         flex:1,
+        alignItems:'center',
         
     },
     encabezado: {

@@ -28,6 +28,7 @@ const styles = StyleSheet.create ({
 
     },
     foto:{
+        margin:15,
     },
     info:{
         textAlign:'center',
