@@ -5,19 +5,22 @@ import { ButtonL } from "./ButtonL";
 export function Login(){
     return(
         <Screen>
-        <Text style={styles.header}>Inicio de sesion</Text>
-        <View style={styles.container}>
-            <TextInput style = {styles.txt}
-                placeholder="Correo electrónico"
-            />
-            <TextInput style={styles.txt}
-                placeholder="Contraseña"
-                secureTextEntry
-            />
+            <View style={styles.container}>
+                <Text style={styles.header}>Inicio de sesión</Text>
+                <View style={styles.login}>
+                    <TextInput style = {styles.txt}
+                        placeholder="Correo electrónico"
+                    />
+                    <TextInput style={styles.txt}
+                        placeholder="Contraseña"
+                        secureTextEntry
+                    />
 
-        </View>
+                </View>
 
-        <ButtonL />
+            <ButtonL />
+            </View>
+
 
 
         </Screen >
@@ -26,13 +29,17 @@ export function Login(){
 }
 const styles = StyleSheet.create({
     container:{
-        //margin:'10px',
+        padding: 16,
+        flex:1,
         
     },
     header: {
-        textAlign: 'center',
-        //fontSize:'20px',
-        fontWeight: 'bold',
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    login:{
+        margin:16,
     },
     txt:{
         //fontsize: '15px',
