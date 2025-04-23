@@ -13,7 +13,7 @@ export function CheckBoxx(){
             }
             isChecked={isChecked}
             
-            rightText={<Link href={""}><Text style={styles.link}>Aceptas los términos y condiciones</Text></Link>}
+            rightText={<Link href={"../assets/terminos_y_condiciones_ubox.pdf"}><Text style={styles.link}>Aceptas los términos y condiciones</Text></Link>}
         />
     );
 }

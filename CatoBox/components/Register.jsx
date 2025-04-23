@@ -3,7 +3,7 @@ import { Screen } from "./Screen";
 import {ButtonR} from "./ButtonR";
 import { Link } from "expo-router";
 import { EyeClosedIcon } from "./Icons";
-import { Picker } from "@react-native-picker/picker";
+import { PickerR } from "./Picker";
 import { CheckBoxx } from "./CheckBoxx";
 
 export function Register(){
@@ -32,19 +32,7 @@ export function Register(){
                         placeholder="Confirmar contraseña"
                         secureTextEntry
                     />
-                    <Picker
-                        style={styles.listContainer}
-                        
-                    >
-                        <Picker.Item label="Seleciona tu carrera" enabled = "false" />
-                        <Picker.Item label="Chistemas" value="java" />
-                        <Picker.Item label="Medicina" value="js" />
-                        <Picker.Item label="Chistemas" value="java" />
-                        <Picker.Item label="Medicina" value="js" />
-                        <Picker.Item label="Chistemas" value="java" />
-                        <Picker.Item label="Medicina" value="js" />
-
-                    </Picker>
+                <PickerR />
 
                 </View>
                 <CheckBoxx />
@@ -84,9 +72,7 @@ const styles = StyleSheet.create({
         margin:10,
         
     },
-    listContainer:{
-        marginTop:12,
-    },
+
     linkContainer:{
         marginTop:12,
 
