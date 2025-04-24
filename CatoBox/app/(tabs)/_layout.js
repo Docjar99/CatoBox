@@ -62,20 +62,7 @@ export default function TabsLayout() {
                     tabBarIcon: ({color}) => <ForoIcon color={color} />,
                 }}
             />
-            <Tabs.Screen
-                name="login"
-                options={{
-                    title: "Login",
-                    tabBarIcon: ({color}) => <CircleInfoIcon color={color} />,
-                }}
-            />
-            <Tabs.Screen
-                name="register"
-                options={{
-                    title: "Register",
-                    tabBarIcon: ({color}) => <CircleInfoIcon color={color} />,
-                }}
-            />
+
             <Tabs.Screen
                 name="userinfo"
                 options={{
