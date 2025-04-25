@@ -3,13 +3,13 @@ import { Picker } from '@react-native-picker/picker';
 import { StyleSheet, View } from 'react-native';
 
 export function PickerR(){
-  const [selectedCareer, setSelectedCareer] = useState('');
+  const [carrera, setCarrera] = useState('');
 
   return (
     <View style={styles.container}>
       <Picker
-        selectedValue={selectedCareer}
-        onValueChange={(itemValue, itemIndex) => setSelectedCareer(itemValue)}
+        selectedValue={carrera}
+        onValueChange={(itemValue, itemIndex) => setCarrera(itemValue)}
         style={styles.listContainer}
       >
         <Picker.Item label="Selecciona tu carrera" value="" enabled={false} />
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   listContainer: {
-    height: 50,
+    height: 30,
     width: '100%',
   },
 });
