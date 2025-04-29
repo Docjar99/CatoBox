@@ -102,15 +102,17 @@ export function Register(){
                         autoCapitalize={'none'}
                     
                     />
-                    <TextInput style = {styles.txt}
+                    <TextInput style = {styles.txt}         
+                        value={password}
+                        onChangeText={(text)=> setPassword(text)}
                         placeholder="Ingresa tu contraseña"
                         secureTextEntry
                     />
                     <TextInput style = {styles.txt}
                         placeholder="Confirmar contraseña"
                         secureTextEntry
-                        onChangeText={(text)=> setPassword(text)}
-                        value={password}
+                        onChangeText={(text)=> setConfirm(text)}
+                        value={confirm}
                         autoCapitalize="none"
                         
                     />
