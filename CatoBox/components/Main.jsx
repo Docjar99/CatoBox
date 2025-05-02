@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import {View, Text, Pressable, StyleSheet, ScrollView} from "react-native";
 import { Screen } from "./Screen";
 import PreguntaFila from "./PreguntaFila";
@@ -11,7 +10,6 @@ const preguntas = [
 export function Main() {
   return (
     <Screen>
-      <StatusBar style="auto" />
       <View style={styles.container}>
         <Text style={styles.encabezado}>Preguntas del Foro</Text>
         <View style={styles.tabla}>
@@ -34,9 +32,8 @@ export function Main() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
     backgroundColor: "#f0f4f8",
-    flex: 1,
+    margin:10,
   },
   encabezado: {
     fontSize: 20,

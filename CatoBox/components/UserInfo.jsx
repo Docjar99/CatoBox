@@ -22,13 +22,14 @@ export function UserInfo(){
 }
 const styles = StyleSheet.create ({
     container:{
-        flex:1,
-        padding:16,
-        alignItems:'center',
-
+        flexDirection:'column',
+        flex:'1',
+        margin: '30%'
     },
     foto:{
         margin:15,
+        alignItems:'center',
+
     },
     info:{
         textAlign:'center',

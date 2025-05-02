@@ -1,4 +1,4 @@
-import { Alert, Button,Text, TextInput, StyleSheet, View } from "react-native";
+import { Alert, Button,Text, TextInput, StyleSheet, View } from 'react-native';
 import { Screen } from "./Screen";
 import { Link } from "expo-router";
 import { EyeClosedIcon } from "./Icons";

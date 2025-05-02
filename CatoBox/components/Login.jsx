@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 
 
 import { Screen } from "./Screen";
-import { ButtonL } from "./ButtonL";
 import { supabase } from "../lib/supabase";
 
 
@@ -63,10 +62,9 @@ export function Login(){
 }
 const styles = StyleSheet.create({
     container:{
-        padding: 16,
         flex:1,
         alignItems:'center',
-
+        marginTop:20,
     },
     button:{
         width:150,
@@ -78,7 +76,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     login:{
-        margin:16,
+        margin:12,
     },
     txt:{
         //fontsize: '15px',

@@ -1,9 +1,14 @@
 import { Screen } from "./Screen";
-import { Text } from "react-native";
+import { Text, StyleSheet } from "react-native";
 export function ForoU(){
     return(
         <Screen>
-            <Text>Hola desde el foro</Text>
+            <Text style={styles.txt}>Hola desde el foro popopo</Text>
         </Screen>
     );
 }
+const styles = StyleSheet.create({
+    txt:{
+        margin:10,
+    }
+})

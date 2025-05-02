@@ -1,8 +1,7 @@
 import  CheckBox  from "react-native-check-box";
 import { React, useState } from "react";
-import { Text } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import { Link } from "expo-router";
-import { StyleSheet } from "nativewind";
 export function CheckBoxx(){
     const [isChecked,setIsChecked] = useState(false);
     return(
@@ -13,7 +12,6 @@ export function CheckBoxx(){
             }
             isChecked={isChecked}
             
-            rightText={<Link href={"../assets/terminos_y_condiciones_ubox.pdf"}><Text style={styles.link}>Aceptas los términos y condiciones</Text></Link>}
         />
     );
 }

@@ -13,39 +13,8 @@ export default function TabsLayout() {
                 headerShown: false,
                 tabBarActiveTintColor: "lightgreen",
                 tabBarInactiveTintColor: "gray",
-                tabBarStyle: {
-                    // Handle platform-specific tab bar height and padding
-                    height: Platform.OS === 'web' ? 65 : 80,
-                    paddingTop: 8,
-                    // Use different padding based on platform and safe area insets
-                    paddingBottom: Platform.OS === 'web' 
-                        ? 15 
-                        : Math.max(20, insets.bottom),
-                    backgroundColor: 'white',
-                    borderTopWidth: 1,
-                    borderTopColor: '#e5e5e5',
-                    position: 'absolute',
-                    // Web-specific styles to ensure tab bar sticks to bottom
-                    ...(Platform.OS === 'web' && {
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        position: 'fixed',
-                        zIndex: 999,
-                    }),
-                },
-                tabBarLabelStyle: {
-                    fontSize: 12,
-                    fontWeight: '500',
-                    paddingBottom: Platform.OS === 'web' ? 8 : 5,
-                    paddingTop: 3,
-                },
-                tabBarIconStyle: {
-                    marginBottom: Platform.OS === 'web' ? 0 : -4,
-                },
-                tabBarItemStyle: {
-                    paddingVertical: 8,
-                }
+                
+
             }}
         >
             <Tabs.Screen
