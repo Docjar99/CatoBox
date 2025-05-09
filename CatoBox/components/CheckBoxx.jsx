@@ -6,7 +6,7 @@ export function CheckBoxx(){
     const [isChecked,setIsChecked] = useState(false);
     return(
         <CheckBox
-            style={{flex: 1, marginBottom:12}}
+            style={{flex: 1, marginBottom:30}}
             onClick={()=>
                 setIsChecked(!isChecked)
             }
@@ -15,9 +15,3 @@ export function CheckBoxx(){
         />
     );
 }
-const styles =StyleSheet.create({
-    link:{
-        color:'blue',
-        
-    },
-})

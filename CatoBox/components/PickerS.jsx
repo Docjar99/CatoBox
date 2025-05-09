@@ -29,14 +29,9 @@ export function PickerS({selectedValue,onValueChange}){
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-  },
-  listContainer: {
-    height: 30,
-    width: '100%',
-  },
+  listContainer:{
+    
+  }
+
 });
 

@@ -10,8 +10,9 @@ export function PickerR({selectedValue, onValueChange}){
         selectedValue={selectedValue}
         onValueChange={onValueChange}
         style={styles.listContainer}
+        
       >
-        <Picker.Item label="Selecciona tu carrera" value="" enabled={false} />
+        <Picker.Item label="a tu carrera" value="" enabled={false} />
         <Picker.Item label="Administración de Empresas" value="Administración de Empresas" />
         <Picker.Item label="Arquitectura" value="Arquitectura" />
         <Picker.Item label="Ciencia Política y Gobierno" value="Ciencia Política y Gobierno" />
@@ -52,14 +53,10 @@ export function PickerR({selectedValue, onValueChange}){
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-  },
-  listContainer: {
-    height: 30,
-    width: '100%',
-  },
+    container:{
+      
+      backgroundColor:'grey',
+    }
+
 });
 

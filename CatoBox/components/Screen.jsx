@@ -23,7 +23,7 @@ export function Screen({ children }) {
 }
 const styles = StyleSheet.create({
     status:{
-        flex:1,
+        flex:0.7,
         
     }
 })

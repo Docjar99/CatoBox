@@ -20,10 +20,10 @@ export function Register(){
     const[email,setEmail] = useState('')
     const[password,setPassword]=useState('')
     const[confirm, setConfirm] = useState('')
-    const[showPassword,setShowPassword]=useState('')
-    const[showConfirm,setShowConfirm]=useState('')
+    const[showPassword,setShowPassword]=useState(false)
+    const[showConfirm,setShowConfirm]=useState(false)
 
-    const[loading,setLoading]=useState('')
+    const[loading,setLoading]=useState(false)
     
     async function signUpWithEmail(){
         if(password!=confirm){
@@ -121,6 +121,7 @@ export function Register(){
                     selectedValue={carrera}
                     onValueChange={(value)=>setCarrera(value)}
                 />
+                <View style={styles.arti}></View>
                 <PickerS 
                     selectedValue={semestre_carrera}
                     onValueChange={(value)=>setSemestre(value)}
@@ -149,6 +150,9 @@ export function Register(){
     );
 }
 const styles = StyleSheet.create({
+    arti:{
+        margin:10,
+    },
     button:{
         width:150,
 
