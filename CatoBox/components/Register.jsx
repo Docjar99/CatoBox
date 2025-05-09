@@ -2,7 +2,7 @@ import { Alert, Button,Text, TextInput, StyleSheet, View } from 'react-native';
 import { Screen } from "./Screen";
 import { Link } from "expo-router";
 import { EyeClosedIcon } from "./Icons";
-import { PickerR } from "./Picker";
+import { PickerR } from "./PickerR";
 import { PickerS } from "./PickerS";
 import { CheckBoxx } from "./CheckBoxx";
 import React, { useState } from "react";
@@ -33,11 +33,7 @@ export function Register(){
 
         setLoading(true)
         try{
-            const{
-                data:{signUpData},
-                error:signUpError
-            } = await supabase.auth.signUp({
-    
+            const{data,error:signUpError} = await supabase.auth.signUp({
                 email:email,
                 password:password,
         });
@@ -45,16 +41,20 @@ export function Register(){
             Alert.alert('Error al crear la cuenta',signUpError.message);
             return;
         }
-        const userId = signUpData.user?.id_usuario;
-        const{error: insertError}=await supabase.from('usuario').insert(
-            {
-                id_usuario: userId,
-                nombres,
-                apaterno,
-                amaterno,
-                carrera,
-                semestre_carrera,
-            }
+        const userId = data.user.id;
+        const{error: insertError}=await supabase
+            .from('usuario')
+            .insert([
+                {
+                    id_usuario: userId,
+                    nombres,
+                    apaterno,
+                    amaterno,
+                    email,
+                    carrera,
+                    semestre_carrera,
+                }
+            ]
         );
 
         
@@ -117,8 +117,14 @@ export function Register(){
                         
                     />
 
-                <PickerR setCarrera={setCarrera}/>
-                <PickerS setSemestre={setSemestre}/>
+                <PickerR 
+                    selectedValue={carrera}
+                    onValueChange={(value)=>setCarrera(value)}
+                />
+                <PickerS 
+                    selectedValue={semestre_carrera}
+                    onValueChange={(value)=>setSemestre(value)}
+                />
                 </View>
                 <CheckBoxx />
                 <View style={styles.button}>

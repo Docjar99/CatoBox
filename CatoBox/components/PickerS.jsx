@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { StyleSheet, View } from 'react-native';
 
-export function PickerS(){
-  const [semestre_carrera, setSemestre] = useState('');
+export function PickerS({selectedValue,onValueChange}){
 
   return (
     <View style={styles.container}>
       <Picker
-        selectedValue={semestre_carrera}
-        onValueChange={(itemValue, itemIndex) => setSemestre(itemValue)}
+        selectedValue={selectedValue}
+        onValueChange={onValueChange}
         style={styles.listContainer}
       >
         <Picker.Item label="Selecciona tu semestre" value="" enabled={false} />
