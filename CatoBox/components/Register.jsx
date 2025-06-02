@@ -139,8 +139,8 @@ export function Register(){
                 </View>
 
 
-                <Link href={""} style={styles.linkContainer} >
-                    <Text style={styles.link}>¿Ya tienes una cuenta?</Text>
+                <Link href="/login" style={styles.linkContainer}>
+                    <Text style={styles.link}>¿Ya tienes una cuenta? Inicia sesión aquí</Text>
                 </Link>
             </View>
            
