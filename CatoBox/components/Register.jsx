@@ -22,53 +22,78 @@ export function Register(){
     const[confirm, setConfirm] = useState('')
     const[showPassword,setShowPassword]=useState(false)
     const[showConfirm,setShowConfirm]=useState(false)
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+
 
     const[loading,setLoading]=useState(false)
     
-    async function signUpWithEmail(){
-        if(password!=confirm){
-            Alert.alert('Error','Las contraseñas deben coincidir');
-            return;
-        }
+    async function signUpWithEmail() {
+    setErrorMessage(''); // Limpiar errores anteriores
 
-        setLoading(true)
-        try{
-            const{data,error:signUpError} = await supabase.auth.signUp({
-                email:email,
-                password:password,
+    // Validación de campos vacíos
+    if (!nombres || !apaterno || !amaterno || !email || !password || !confirm || !carrera || !semestre_carrera) {
+        setErrorMessage('Por favor completa todos los campos.');
+        return;
+    }
+
+    // Validación de contraseña
+    if (password !== confirm) {
+        setErrorMessage('Las contraseñas deben coincidir.');
+        return;
+    }
+
+    // Validación de formato de contraseña (mínimo)
+    if (password.length < 8) {
+        setErrorMessage('La contraseña debe tener al menos 8 caracteres.');
+        return;
+    }
+
+    // Validación de formato de correo
+    if (!email.includes("@")) {
+        setErrorMessage('Ingresa un correo electrónico válido.');
+        return;
+    }
+
+    setLoading(true);
+
+    try {
+        const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
         });
-        if(signUpError){
-            Alert.alert('Error al crear la cuenta',signUpError.message);
-            return;
-        }
-        const userId = data.user.id;
-        const{error: insertError}=await supabase
-            .from('usuario')
-            .insert([
-                {
-                    id_usuario: userId,
-                    nombres,
-                    apaterno,
-                    amaterno,
-                    email,
-                    carrera,
-                    semestre_carrera,
-                }
-            ]
-        );
 
-        
-        if (insertError) {
-            Alert.alert('Error al registrar usuario', insertError.message);
-          } else {
-            Alert.alert('Registro exitoso', 'Tu cuenta ha sido registrada correctamente.');
-          }
-        } catch (error) {
-          Alert.alert('Error inesperado', error.message);
-        } finally {
-          setLoading(false);
+        if (signUpError) {
+        setErrorMessage(signUpError.message); // ← Mostrar error de Supabase
+        return;
         }
-      
+
+        const userId = data.user.id;
+
+        const { error: insertError } = await supabase
+        .from('usuario')
+        .insert([{
+            id_usuario: userId,
+            nombres,
+            apaterno,
+            amaterno,
+            email,
+            carrera,
+            semestre_carrera,
+        }]);
+
+        if (insertError) {
+        setErrorMessage(insertError.message);
+        } else {
+            setSuccessMessage('Registro exitoso. Tu cuenta ha sido registrada correctamente.');
+            setErrorMessage('');
+        }
+
+    } catch (error) {
+        setErrorMessage('Error inesperado: ' + error.message);
+    } finally {
+        setLoading(false);
+    }
     }
     
     return(
@@ -138,6 +163,14 @@ export function Register(){
                     />
                 </View>
 
+                {errorMessage ? (   // ERROR MENSAJITO
+                <Text style={styles.errorText}>{errorMessage}</Text>
+                ) : null}
+
+                {successMessage ? ( // EEEEXITO
+                <Text style={styles.successText}>{successMessage}</Text>
+                ) : null}
+
 
                 <Link href="/login" style={styles.linkContainer}>
                     <Text style={styles.link}>¿Ya tienes una cuenta? Inicia sesión aquí</Text>
@@ -187,6 +220,20 @@ const styles = StyleSheet.create({
     },
     link:{
         color:'blue',
-    }
+    },
 
+    errorText: {
+    color: 'red',
+    marginTop: 10,
+    textAlign: 'center',
+    fontSize: 14,
+    },
+
+    successText: {
+    color: 'green',
+    marginTop: 10,
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: 'bold',
+    },
 }) 

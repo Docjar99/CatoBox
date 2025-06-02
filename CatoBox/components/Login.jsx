@@ -4,6 +4,9 @@ import React, {useState} from 'react';
 
 import { Screen } from "./Screen";
 import { supabase } from "../lib/supabase";
+import { Link } from "expo-router";
+import { useRouter } from "expo-router";
+
 
 
 
@@ -11,16 +14,49 @@ export function Login(){
     const[email, setEmail] = useState('')
     const[password, setPassword] = useState('')
     const[loading,setLoading]=useState(false)
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const router = useRouter();
 
-    async function signInWithEmail(){
-        setLoading(true)
-        const{error} = await supabase.auth.signInWithPassword({
-            email:email,
-            password:password,
-        })
-        if(error) Alert.alert(error.message)
-            setLoading(false)
+
+    async function signInWithEmail() {
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    if (!email || !password) {
+        setErrorMessage('Por favor completa todos los campos.');
+        return;
     }
+
+    if (!email.includes('@')) {
+        setErrorMessage('Correo electrónico inválido.');
+        return;
+    }
+
+    setLoading(true);
+    try {
+        const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+        });
+
+        if (error) {
+        setErrorMessage(error.message); // ERROR MENSAJE
+        } else {
+            setSuccessMessage('Inicio de sesión exitoso.');  // EEEEXITO
+            setErrorMessage('');
+            setTimeout(() => {
+            router.replace("/foro");
+            }, 1000);
+
+        }
+    } catch (err) {
+        setErrorMessage('Error inesperado: ' + err.message);
+    } finally {
+        setLoading(false);
+    }
+    }
+
 
     return(
         <Screen>
@@ -42,6 +78,16 @@ export function Login(){
                     />
 
                 </View>
+
+            {errorMessage ? (
+            <Text style={styles.errorText}>{errorMessage}</Text>
+            ) : null}
+
+            {successMessage ? (
+            <Text style={styles.successText}>{successMessage}</Text>
+            ) : null}
+
+
             <View style={styles.button}>
                 <Button 
                     color="black"
@@ -51,6 +97,10 @@ export function Login(){
                 
                 />
             </View>
+
+                <Link href="/" style={styles.linkContainer}>
+                    <Text style={styles.link}>¿No tienes cuenta? Regístrate aquí</Text>
+                </Link>
 
             </View>
 
@@ -85,6 +135,29 @@ const styles = StyleSheet.create({
         borderBottomColor:'grey',
         borderBottomWidth:2,
         margin:10,
+    },
+
+    linkContainer: {
+        marginTop: 12,
+        alignItems: 'center',
+    },
+    link: {
+        color: 'blue',
+        textDecorationLine: 'underline',
+    },
+
+    errorText: {
+    color: 'red',
+    marginTop: 10,
+    textAlign: 'center',
+    fontSize: 14,
+    },
+    successText: {
+    color: 'green',
+    marginTop: 10,
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: 'bold',
     },
 
 
