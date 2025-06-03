@@ -1,38 +1,64 @@
-import {Text, TextInput, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
 import { Screen } from "./Screen";
-import {User} from "./User";
-export function UserInfo(){
-    return(
-        <Screen>
-            <View style={styles.container}>
-                <View style={styles.foto}>
-                    <User />
-                </View>
-                <View style={styles.info}>
-                    <Text>Nombres: Wissin </Text>
-                    <Text>Apellidos: Yandel</Text>
-                    <Text>Carrera: Chistemas</Text>
-                    <Text>Semestre: -1</Text>
-                </View>
+import { User } from "./User";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 
-            </View>
+export function UserInfo() {
+  const [userData, setUserData] = useState(null);
 
-        </Screen>
-    );
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        console.error("No se pudo obtener el usuario autenticado");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("usuario")
+        .select("nombres, apaterno, amaterno, carrera, semestre_carrera")
+        .eq("id_usuario", user.id)
+        .single();
+
+      if (error) {
+        console.error("Error al obtener los datos del perfil:", error.message);
+      } else {
+        setUserData(data);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  return (
+    <Screen>
+      <View style={styles.foto}>
+        <User />
+      </View>
+      <View style={styles.info}>
+        {userData ? (
+          <>
+            <Text>Nombres: {userData.nombres}</Text>
+            <Text>Apellidos: {userData.apaterno} {userData.amaterno}</Text>
+            <Text>Carrera: {userData.carrera}</Text>
+            <Text>Semestre: {userData.semestre_carrera}</Text>
+          </>
+        ) : (
+          <Text>Cargando perfil...</Text>
+        )}
+      </View>
+    </Screen>
+  );
 }
-const styles = StyleSheet.create ({
-    container:{
-        flexDirection:'column',
-        flex:'1',
-        margin: '30%'
-    },
-    foto:{
-        margin:15,
-        alignItems:'center',
 
-    },
-    info:{
-        textAlign:'center',
-        alignItems:'center',
-    },
-})
+const styles = StyleSheet.create({
+  foto: {
+    margin: 15,
+    alignItems: "center",
+  },
+  info: {
+    alignItems: "center",
+  },
+});
