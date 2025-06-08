@@ -13,7 +13,7 @@ export default function Layout() {
                     screenOptions={{
                         headerStyle: {
                             backgroundColor: "#00bc70",
-                            shadowColor: "transparent", // Sin sombra si deseas plano
+                            shadowColor: "transparent",
                         },
                         headerTitleStyle: {
                             color: "#ffffff",
@@ -23,7 +23,7 @@ export default function Layout() {
                         headerTintColor: "#ffffff",
                         headerTitle: "CatoBox",
                         headerLeft: () => <Logo />,
-                        headerRight: () => <User />,
+                        /*headerRight: () => <User />,*/
                     }}
                 />
             </SafeAreaView>

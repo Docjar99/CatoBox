@@ -1,11 +1,13 @@
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View, Pressable, Alert } from "react-native";
 import { Screen } from "./Screen";
 import { User } from "./User";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { useRouter } from "expo-router";
 
 export function UserInfo() {
   const [userData, setUserData] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -31,6 +33,15 @@ export function UserInfo() {
 
     fetchUserData();
   }, []);
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      Alert.alert("Error", "No se pudo cerrar sesión.");
+    } else {
+      router.replace("/login");
+    }
+  };
 
   return (
     <Screen>
@@ -60,8 +71,11 @@ export function UserInfo() {
             <Text style={styles.loading}>Cargando perfil...</Text>
           )}
         </View>
-      </View>
 
+        <Pressable style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutText}>Cerrar sesión</Text>
+        </Pressable>
+      </View>
     </Screen>
   );
 }
@@ -104,5 +118,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "gray",
     marginTop: 20,
+  },
+  logoutButton: {
+    marginTop: 30,
+    backgroundColor: "#00bc70",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+  },
+  logoutText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

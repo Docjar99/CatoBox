@@ -1,7 +1,7 @@
 import { Platform, StyleSheet } from "react-native";
 import { Tabs } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { HomeIcon, CircleInfoIcon, ForoIcon, ConfigIcon } from "../../components/Icons";
+import { HomeIcon, CircleInfoIcon, ForoIcon, ConfigIcon, UserIcon } from "../../components/Icons";
 
 export default function TabsLayout() {
     const insets = useSafeAreaInsets();
@@ -45,11 +45,11 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name="userinfo"
-                options={{
-                    title: "Perfil",
-                    tabBarIcon: ({ color }) => <ConfigIcon color={color} />,
-                }}
+            name="userinfo"
+            options={{
+                title: "Perfil",
+                tabBarIcon: ({ color }) => <UserIcon color={color} />,
+            }}
             />
         </Tabs>
     );
