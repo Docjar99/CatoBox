@@ -7,15 +7,23 @@ import { User } from "../components/User";
 export default function Layout() {
     return (
         <SafeAreaProvider>
+            <StatusBar backgroundColor="#00bc70" barStyle="light-content" />
             <SafeAreaView style={styles.container} edges={['top']}>
                 <Stack
                     screenOptions={{
-                        headerStyle: { backgroundColor: "lightgreen" },
-                        headerTintColor: "black",
+                        headerStyle: {
+                            backgroundColor: "#00bc70",
+                            shadowColor: "transparent", // Sin sombra si deseas plano
+                        },
+                        headerTitleStyle: {
+                            color: "#ffffff",
+                            fontWeight: "bold",
+                            fontSize: 20,
+                        },
+                        headerTintColor: "#ffffff",
                         headerTitle: "CatoBox",
                         headerLeft: () => <Logo />,
                         headerRight: () => <User />,
-
                     }}
                 />
             </SafeAreaView>
@@ -26,5 +34,6 @@ export default function Layout() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    }
+        backgroundColor: "#ffffff",
+    },
 });

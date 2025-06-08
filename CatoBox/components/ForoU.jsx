@@ -68,32 +68,50 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 10,
+    color: "#00bc70", // verde oscuro
+    textAlign: "center",
   },
   link: {
-    color: "blue",
+    backgroundColor: "#66BB6A", // verde más claro
+    color: "white",
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    textAlign: "center",
+    fontWeight: "bold",
     marginBottom: 20,
+    alignSelf: "center",
   },
   card: {
-    backgroundColor: "#eee",
-    borderRadius: 8,
-    padding: 12,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 10,
+    padding: 14,
     marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   pregunta: {
     fontSize: 16,
     fontWeight: "bold",
+    color: "#2E7D32", // texto verde más fuerte
   },
   autor: {
     fontSize: 14,
-    color: "#444",
+    color: "#555",
+    marginTop: 4,
   },
   fecha: {
     fontSize: 12,
-    color: "#666",
+    color: "#888",
+    marginTop: 2,
   },
   noData: {
     fontStyle: "italic",
     color: "gray",
     textAlign: "center",
+    marginTop: 40,
   },
 });

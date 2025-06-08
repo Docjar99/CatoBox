@@ -4,42 +4,53 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HomeIcon, CircleInfoIcon, ForoIcon, ConfigIcon } from "../../components/Icons";
 
 export default function TabsLayout() {
-    // Get safe area insets to handle notches and home indicators
     const insets = useSafeAreaInsets();
-    
+
     return (
         <Tabs
             screenOptions={{
                 headerShown: false,
-                tabBarActiveTintColor: "lightgreen",
+                tabBarActiveTintColor: "#00bc70", // Verde activo
                 tabBarInactiveTintColor: "gray",
-                
-
+                tabBarStyle: {
+                    backgroundColor: "#ffffff",
+                    borderTopWidth: 0,
+                    elevation: 10,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: -2 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 4,
+                    paddingBottom: insets.bottom || 8,
+                    paddingTop: 6,
+                    height: 60 + (insets.bottom || 8),
+                },
+                tabBarLabelStyle: {
+                    fontSize: 14,
+                    fontWeight: "500",
+                },
             }}
         >
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: "Home",
-                    tabBarIcon: ({color}) => <HomeIcon color={color} />,
+                    title: "Inicio",
+                    tabBarIcon: ({ color }) => <HomeIcon color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="foro"
                 options={{
                     title: "Foro",
-                    tabBarIcon: ({color}) => <ForoIcon color={color} />,
+                    tabBarIcon: ({ color }) => <ForoIcon color={color} />,
                 }}
             />
-
             <Tabs.Screen
                 name="userinfo"
                 options={{
-                    title: "Configuración",
-                    tabBarIcon: ({color}) => <ConfigIcon color={color} />,
+                    title: "Perfil",
+                    tabBarIcon: ({ color }) => <ConfigIcon color={color} />,
                 }}
             />
-
         </Tabs>
     );
 }
