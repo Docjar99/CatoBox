@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert, Pressable
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { supabase } from "../../lib/supabase";
+import { Link } from "expo-router";
 
 
 export default function VerPregunta() {
@@ -210,9 +211,16 @@ export default function VerPregunta() {
         <Text style={styles.titulo}>{pregunta.titulo}</Text>
       )}
 
-      <Text style={styles.autor}>
-        Autor: {pregunta.usuario?.nombres} {pregunta.usuario?.apaterno}
+      <Text style={{ fontStyle: "italic" }}>
+        Autor:{" "}
+        <Link
+          href={`/perfilUsuario/${pregunta.id_usuario}`}
+          style={{ color: "#007bff", textDecorationLine: "underline" }}
+        >
+          {pregunta.usuario?.nombres} {pregunta.usuario?.apaterno}
+        </Link>
       </Text>
+
       <Text style={styles.fecha}>
         Publicado el: {new Date(pregunta.fechapublicacion).toLocaleDateString()}
       </Text>
