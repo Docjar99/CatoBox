@@ -1,8 +1,9 @@
 import { useLocalSearchParams } from "expo-router";
-import { View, Text, TextInput, Button, StyleSheet, ScrollView } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert } from "react-native";
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { supabase } from "../../lib/supabase";
+
 
 export default function VerPregunta() {
   const { id } = useLocalSearchParams();
@@ -10,32 +11,52 @@ export default function VerPregunta() {
   const [comentarios, setComentarios] = useState([]);
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [error, setError] = useState("");
+  const [userId, setUserId] = useState(null); // 🔒 nuevo
   const router = useRouter();
 
-  // Obtener pregunta
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      console.log("Usuario actual:", user?.id);
+      setUserId(user?.id); // 🔒 guardar en estado
+    };
+    fetchUser();
+  }, []);
+
   useEffect(() => {
     const obtenerPregunta = async () => {
       const { data, error } = await supabase
         .from("publicacionforo")
-        .select("titulo, contenido, fechapublicacion, usuario(nombres, apaterno)")
+        .select("id_usuario, titulo, contenido, fechapublicacion, usuario(nombres, apaterno)")
         .eq("id_publicacionforo", id)
         .single();
-      if (!error) setPregunta(data);
+
+      if (error) {
+        console.error("Error al obtener pregunta:", error.message);
+      } else {
+        setPregunta(data);
+      }
     };
+
     if (id) obtenerPregunta();
   }, [id]);
 
-  // Obtener comentarios
+  const refetchComentarios = async () => {
+    const { data, error } = await supabase
+      .from("comentariopublicacion")
+      .select("id_comentario, id_usuario, contenido, fecha, usuario(nombres, apaterno)")
+      .eq("id_publicacion", id)
+      .order("fecha", { ascending: true });
+
+    if (error) {
+      console.error("Error al obtener comentarios:", error.message);
+    } else {
+      setComentarios(data);
+    }
+  };
+
   useEffect(() => {
-    const obtenerComentarios = async () => {
-      const { data, error } = await supabase
-        .from("comentariopublicacion")
-        .select("contenido, fecha, usuario(nombres, apaterno)")
-        .eq("id_publicacion", id)
-        .order("fecha", { ascending: true });
-      if (!error) setComentarios(data);
-    };
-    if (id) obtenerComentarios();
+    if (id) refetchComentarios();
   }, [id]);
 
   const publicarComentario = async () => {
@@ -45,33 +66,69 @@ export default function VerPregunta() {
       return;
     }
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      setError("Error al obtener el usuario.");
+    if (!userId) {
+      setError("No se pudo obtener el usuario.");
       return;
     }
 
-    const { error: insertError } = await supabase
-      .from("comentariopublicacion")
-      .insert({
-        id_publicacion: id,
-        id_usuario: user.id,
-        contenido: nuevoComentario,
-        fecha: new Date(),
-        activo: true,
-      });
+    const { error: insertError } = await supabase.from("comentariopublicacion").insert({
+      id_publicacion: id,
+      id_usuario: userId,
+      contenido: nuevoComentario,
+      fecha: new Date(),
+      activo: true,
+    });
 
     if (insertError) {
       setError("Error al publicar el comentario.");
     } else {
       setNuevoComentario("");
-      // Refrescar comentarios
-      const { data } = await supabase
-        .from("comentariopublicacion")
-        .select("contenido, fecha, usuario(nombres, apaterno)")
-        .eq("id_publicacion", id)
-        .order("fecha", { ascending: true });
-      setComentarios(data);
+      refetchComentarios();
+    }
+  };
+
+  const eliminarPublicacion = async () => {
+    Alert.alert(
+      "¿Eliminar publicación?",
+      "Esta acción no se puede deshacer.",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: async () => {
+            const { error } = await supabase
+              .from("publicacionforo")
+              .delete()
+              .eq("id_publicacionforo", id)
+              .eq("id_usuario", userId); // opcional para seguridad extra
+  
+            if (error) {
+              Alert.alert("Error", "No se pudo eliminar la publicación.");
+              console.error("Error al eliminar publicación:", error.message);
+            } else {
+              router.back(); // vuelve al foro
+            }
+          },
+        },
+      ]
+    );
+  };
+  
+  // 🔒 Función para eliminar comentario
+  const eliminarComentario = async (id_comentario) => {
+    console.log("Eliminando comentario:", id_comentario);
+
+    const { error } = await supabase
+      .from("comentariopublicacion")
+      .delete()
+      .eq("id_comentario", id_comentario);
+
+    if (error) {
+      console.error("Error al eliminar comentario:", error.message);
+    } else {
+      console.log("Comentario eliminado con éxito");
+      refetchComentarios();
     }
   };
 
@@ -84,7 +141,7 @@ export default function VerPregunta() {
       <Text style={styles.volver} onPress={() => router.back()}>
         ← Volver al foro
       </Text>
-
+  
       <Text style={styles.titulo}>{pregunta.titulo}</Text>
       <Text style={styles.autor}>
         Autor: {pregunta.usuario?.nombres} {pregunta.usuario?.apaterno}
@@ -93,7 +150,42 @@ export default function VerPregunta() {
         Publicado el: {new Date(pregunta.fechapublicacion).toLocaleDateString()}
       </Text>
       <Text style={styles.contenido}>{pregunta.contenido}</Text>
-
+  
+      {/* 🔒 Mostrar opción para eliminar publicación si es el autor */}
+      {userId === pregunta.id_usuario && (
+        <Text
+          style={styles.eliminarTexto}
+          onPress={() =>
+            Alert.alert(
+              "¿Eliminar publicación?",
+              "Esta acción eliminará también todos los comentarios.",
+              [
+                { text: "Cancelar", style: "cancel" },
+                {
+                  text: "Eliminar",
+                  style: "destructive",
+                  onPress: async () => {
+                    const { error } = await supabase
+                      .from("publicacionforo")
+                      .delete()
+                      .eq("id_publicacionforo", id)
+                      .eq("id_usuario", userId);
+  
+                    if (error) {
+                      Alert.alert("Error", "No se pudo eliminar la publicación.");
+                    } else {
+                      router.back();
+                    }
+                  },
+                },
+              ]
+            )
+          }
+        >
+          Eliminar publicación
+        </Text>
+      )}
+  
       <Text style={styles.subtitulo}>Comentarios</Text>
       {comentarios.length === 0 ? (
         <Text style={styles.noComentarios}>Aún no hay comentarios.</Text>
@@ -107,10 +199,33 @@ export default function VerPregunta() {
               {new Date(c.fecha).toLocaleDateString()}
             </Text>
             <Text>{c.contenido}</Text>
+  
+            {/* 🔒 Mostrar solo si es del autor */}
+            {userId === c.id_usuario && (
+              <Text
+                style={styles.eliminarTexto}
+                onPress={() =>
+                  Alert.alert(
+                    "¿Eliminar comentario?",
+                    "Esta acción no se puede deshacer.",
+                    [
+                      { text: "Cancelar", style: "cancel" },
+                      {
+                        text: "Eliminar",
+                        style: "destructive",
+                        onPress: () => eliminarComentario(c.id_comentario),
+                      },
+                    ]
+                  )
+                }
+              >
+                Eliminar
+              </Text>
+            )}
           </View>
         ))
       )}
-
+  
       <TextInput
         placeholder="Escribe un comentario..."
         value={nuevoComentario}
@@ -122,83 +237,33 @@ export default function VerPregunta() {
       <Button title="Comentar" onPress={publicarComentario} />
     </ScrollView>
   );
-}
+  
+            }
+
+
+
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    gap: 12,
-  },
-  volver: {
-    color: "blue",
-    marginBottom: 10,
-  },
-  titulo: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  autor: {
-    fontSize: 14,
-    fontStyle: "italic",
-  },
-  fecha: {
-    fontSize: 12,
-    color: "gray",
-    marginBottom: 10,
-  },
-  contenido: {
-    fontSize: 16,
-    lineHeight: 22,
-    marginBottom: 20,
-  },
-  subtitulo: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 20,
-  },
-  comentario: {
-    backgroundColor: "#f0f0f0",
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 6,
-  },
-  comAutor: {
-    fontWeight: "bold",
-  },
-  comFecha: {
-    fontSize: 11,
-    color: "#666",
-  },
-  noComentarios: {
-    fontStyle: "italic",
-    color: "gray",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 6,
-    minHeight: 60,
-  },
-  error: {
+  container: { padding: 20, gap: 12 },
+  volver: { color: "blue", marginBottom: 10 },
+  titulo: { fontSize: 24, fontWeight: "bold" },
+  autor: { fontSize: 14, fontStyle: "italic" },
+  fecha: { fontSize: 12, color: "gray", marginBottom: 10 },
+  contenido: { fontSize: 16, lineHeight: 22, marginBottom: 20 },
+  subtitulo: { fontSize: 18, fontWeight: "bold", marginTop: 20 },
+  comentario: { backgroundColor: "#f0f0f0", padding: 10, marginVertical: 5, borderRadius: 6 },
+  comAutor: { fontWeight: "bold" },
+  comFecha: { fontSize: 11, color: "#666" },
+  noComentarios: { fontStyle: "italic", color: "gray" },
+  input: { borderWidth: 1, borderColor: "#ccc", padding: 10, borderRadius: 6, minHeight: 60 },
+  error: { color: "red", textAlign: "center" },
+  cargando: { padding: 20, textAlign: "center", fontSize: 16, color: "gray" },
+  eliminarTexto: {
     color: "red",
-    textAlign: "center",
+    textDecorationLine: "underline",
+    fontSize: 12,
+    marginTop: 4,
+    alignSelf: "flex-start",
   },
-  cargando: {
-    padding: 20,
-    textAlign: "center",
-    fontSize: 16,
-    color: "gray",
-  },
-  card: {
-    backgroundColor: "#f9f9f9",
-    borderRadius: 10,
-    padding: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-
+  
 });
