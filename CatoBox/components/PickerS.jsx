@@ -5,11 +5,12 @@ import { StyleSheet, View } from 'react-native';
 export function PickerS({selectedValue,onValueChange}){
 
   return (
-    <View style={styles.container}>
+    <View style={styles.pickerContainer}>
       <Picker
         selectedValue={selectedValue}
         onValueChange={onValueChange}
-        style={styles.listContainer}
+        style={styles.picker}
+        dropdownIconColor="#1B5E20"
       >
         <Picker.Item label="Selecciona tu semestre" value="" enabled={false} />
         <Picker.Item label="1" value="1" />
@@ -29,9 +30,17 @@ export function PickerS({selectedValue,onValueChange}){
 };
 
 const styles = StyleSheet.create({
-  listContainer:{
-    
-  }
-
+  pickerContainer: {
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 6,
+    marginVertical: 6,
+    overflow: "hidden",
+  },
+  picker: {
+    height: 32,
+    paddingHorizontal: 8,
+    color: "#333",
+  },
 });
-

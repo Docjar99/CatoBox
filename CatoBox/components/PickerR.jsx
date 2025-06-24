@@ -5,14 +5,15 @@ import { StyleSheet, View } from 'react-native';
 export function PickerR({selectedValue, onValueChange}){
 
   return (
-    <View style={styles.container}>
+    <View style={styles.pickerContainer}>
       <Picker
         selectedValue={selectedValue}
         onValueChange={onValueChange}
-        style={styles.listContainer}
+        style={styles.picker}
+        dropdownIconColor="#1B5E20"
         
       >
-        <Picker.Item label="a tu carrera" value="" enabled={false} />
+        <Picker.Item label="Selecciona tu carrera" value="" enabled={false} />
         <Picker.Item label="Administración de Empresas" value="Administración de Empresas" />
         <Picker.Item label="Arquitectura" value="Arquitectura" />
         <Picker.Item label="Ciencia Política y Gobierno" value="Ciencia Política y Gobierno" />
@@ -53,10 +54,17 @@ export function PickerR({selectedValue, onValueChange}){
 };
 
 const styles = StyleSheet.create({
-    container:{
-      
-      backgroundColor:'grey',
-    }
-
+  pickerContainer: {
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 6,
+    marginVertical: 6,
+    overflow: "hidden",
+  },
+  picker: {
+    height: 32,
+    paddingHorizontal: 8,
+    color: "#333",
+  },
 });
-

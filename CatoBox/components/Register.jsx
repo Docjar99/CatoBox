@@ -98,142 +98,125 @@ export function Register(){
     
     return(
         <Screen>
-            <View style={styles.container}>
-                <Text style = {styles.encabezado}>Registro de estudiante</Text>
-                <View style={styles.register}>
-                    <TextInput style = {styles.txt}
-                        placeholder="Apellido Paterno"
-                        onChangeText={(text)=>setApaterno(text)}
-                        value={apaterno}
+        <View style={styles.container}>
+            <Text style={styles.header}>Registro de estudiante</Text>
 
-                    />
-                    <TextInput style = {styles.txt}
-                        placeholder="Apellido Materno"
-                        onChangeText={(text)=>setAmaterno(text)}
-                        value={amaterno}
+            <View style={styles.card}>
+            <TextInput
+                style={styles.input}
+                placeholder="Apellido Paterno"
+                onChangeText={(text) => setApaterno(text)}
+                value={apaterno}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Apellido Materno"
+                onChangeText={(text) => setAmaterno(text)}
+                value={amaterno}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Nombres"
+                onChangeText={(text) => setNombres(text)}
+                value={nombres}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Correo electrónico"
+                onChangeText={(text) => setEmail(text)}
+                value={email}
+                autoCapitalize="none"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Contraseña"
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+                secureTextEntry
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Confirmar contraseña"
+                onChangeText={(text) => setConfirm(text)}
+                value={confirm}
+                secureTextEntry
+            />
 
-                    />
-                    <TextInput style = {styles.txt}
-                        placeholder="Nombres"
-                        onChangeText={(text)=>setNombres(text)}
-                        value={nombres}
+            <PickerR selectedValue={carrera} onValueChange={setCarrera} />
+            <View style={{ marginVertical: 6 }} />
+            <PickerS selectedValue={semestre_carrera} onValueChange={setSemestre} />
 
-                    
-                    />
-                    <TextInput style = {styles.txt}
-                        onChangeText={(text)=> setEmail(text)}
-                        placeholder="Correo electrónico"
-                        value={email}
-                        autoCapitalize={'none'}
-                    
-                    />
-                    <TextInput style = {styles.txt}         
-                        value={password}
-                        onChangeText={(text)=> setPassword(text)}
-                        placeholder="Ingresa tu contraseña"
-                        secureTextEntry
-                    />
-                    <TextInput style = {styles.txt}
-                        placeholder="Confirmar contraseña"
-                        secureTextEntry
-                        onChangeText={(text)=> setConfirm(text)}
-                        value={confirm}
-                        autoCapitalize="none"
-                        
-                    />
+            <CheckBoxx />
 
-                <PickerR 
-                    selectedValue={carrera}
-                    onValueChange={(value)=>setCarrera(value)}
-                />
-                <View style={styles.arti}></View>
-                <PickerS 
-                    selectedValue={semestre_carrera}
-                    onValueChange={(value)=>setSemestre(value)}
-                />
-                </View>
-                <CheckBoxx />
-                <View style={styles.button}>
-                    <Button
-                        color="black"
-                        title="Registrarse"
-                        disabled={loading}
-                        onPress={signUpWithEmail}
-                    
-                    />
-                </View>
+            {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+            {successMessage ? <Text style={styles.success}>{successMessage}</Text> : null}
 
-                {errorMessage ? (   // ERROR MENSAJITO
-                <Text style={styles.errorText}>{errorMessage}</Text>
-                ) : null}
+            <Button
+                title="Registrarse"
+                onPress={signUpWithEmail}
+                color="#00bc70"
+                disabled={loading}
+            />
 
-                {successMessage ? ( // EEEEXITO
-                <Text style={styles.successText}>{successMessage}</Text>
-                ) : null}
-
-
-                <Link href="/login" style={styles.linkContainer}>
-                    <Text style={styles.link}>¿Ya tienes una cuenta? Inicia sesión aquí</Text>
-                </Link>
+            <Link href="/login" style={styles.linkContainer}>
+                <Text style={styles.link}>¿Ya tienes una cuenta? Inicia sesión aquí</Text>
+            </Link>
             </View>
-           
-
-
+        </View>
         </Screen>
+
     );
 }
 const styles = StyleSheet.create({
-    arti:{
-        margin:10,
-    },
-    button:{
-        width:150,
-
-    },
-    container:{
-        padding: 16,
-        flex:1,
-        alignItems:'center',
-        
-    },
-    encabezado: {
-        fontSize: 20,
-        fontWeight: "bold",
-        textAlign: "center",
-    },
-    register:{
-        margin:16,
-    },
-    txt:{
-        //fontsize: '15px',
-        textAlign: 'center',
-        //borderRadius: '20px',
-        borderBottomColor:'grey',
-        borderBottomWidth:2,
-        margin:10,
-        
-    },
-
-    linkContainer:{
-        marginTop:12,
-
-    },
-    link:{
-        color:'blue',
-    },
-
-    errorText: {
-    color: 'red',
-    marginTop: 10,
-    textAlign: 'center',
+  container: {
+    padding: 16,
+    backgroundColor: "#ffffff",
+    flex: 1,
+    alignItems: "center",
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#00bc70",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  card: {
+    backgroundColor: "#f9f9f9",
+    borderRadius: 12,
+    padding: 20,
+    width: "90%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+    gap: 12,
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+    backgroundColor: "#fff",
+    padding: 8,
+    borderRadius: 6,
+  },
+  error: {
+    color: "red",
+    textAlign: "center",
     fontSize: 14,
-    },
-
-    successText: {
-    color: 'green',
-    marginTop: 10,
-    textAlign: 'center',
+  },
+  success: {
+    color: "green",
+    textAlign: "center",
     fontSize: 14,
-    fontWeight: 'bold',
-    },
-}) 
+    fontWeight: "bold",
+  },
+  linkContainer: {
+    marginTop: 12,
+    alignItems: "center",
+  },
+  link: {
+    color: "#1E88E5",
+    textDecorationLine: "underline",
+  },
+});

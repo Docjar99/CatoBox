@@ -31,3 +31,7 @@ export const EyeOpenIcon=(props)=>{
 export const EyeClosedIcon=(props)=>{
     return <Octicons name="eye-closed" size={24} color="black" />
 };
+
+export const UserIcon = (props) => {
+  return <Octicons name="person" size={24} color="black" />;
+};

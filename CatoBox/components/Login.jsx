@@ -60,105 +60,95 @@ export function Login(){
 
     return(
         <Screen>
-            <View style={styles.container}>
-                <Text style={styles.header}>Inicio de sesión</Text>
-                <View style={styles.login}>
-                    <TextInput style = {styles.txt}
-                        onChangeText={(text)=> setEmail(text)}
-                        placeholder="Correo electrónico"
-                        value={email}
-                        autoCapitalize={'none'}
-                    />
-                    <TextInput style={styles.txt}
-                        placeholder="Contraseña"
-                        secureTextEntry
-                        onChangeText={(text)=> setPassword(text)}
-                        value={password}
-                        autoCapitalize="none"
-                    />
+        <View style={styles.container}>
+            <Text style={styles.header}>Inicio de sesión</Text>
 
-                </View>
+            <View style={styles.card}>
+            <TextInput
+                style={styles.input}
+                placeholder="Correo electrónico"
+                onChangeText={(text) => setEmail(text)}
+                value={email}
+                autoCapitalize="none"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Contraseña"
+                secureTextEntry
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+                autoCapitalize="none"
+            />
 
-            {errorMessage ? (
-            <Text style={styles.errorText}>{errorMessage}</Text>
-            ) : null}
+            {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+            {successMessage ? <Text style={styles.success}>{successMessage}</Text> : null}
 
-            {successMessage ? (
-            <Text style={styles.successText}>{successMessage}</Text>
-            ) : null}
+            <Button
+                title="Iniciar sesión"
+                onPress={signInWithEmail}
+                color="#00bc70"
+                disabled={loading}
+            />
 
-
-            <View style={styles.button}>
-                <Button 
-                    color="black"
-                    title="Iniciar sesion"
-                    disabled={loading}
-                    onPress={()=>signInWithEmail()}
-                
-                />
+            <Link href="/" style={styles.linkContainer}>
+                <Text style={styles.link}>¿No tienes cuenta? Regístrate aquí</Text>
+            </Link>
             </View>
-
-                <Link href="/" style={styles.linkContainer}>
-                    <Text style={styles.link}>¿No tienes cuenta? Regístrate aquí</Text>
-                </Link>
-
-            </View>
-
-
-
-        </Screen >
+        </View>
+        </Screen>
     );
 
 }
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        alignItems:'center',
-        marginTop:20,
-    },
-    button:{
-        width:150,
-
-    },
-    header: {
-        fontSize: 20,
-        fontWeight: "bold",
-        textAlign: "center",
-    },
-    login:{
-        margin:12,
-    },
-    txt:{
-        //fontsize: '15px',
-        textAlign: 'center',
-        //borderRadius: '20px',
-        borderBottomColor:'grey',
-        borderBottomWidth:2,
-        margin:10,
-    },
-
-    linkContainer: {
-        marginTop: 12,
-        alignItems: 'center',
-    },
-    link: {
-        color: 'blue',
-        textDecorationLine: 'underline',
-    },
-
-    errorText: {
-    color: 'red',
-    marginTop: 10,
-    textAlign: 'center',
+  container: {
+    padding: 16,
+    backgroundColor: "#ffffff",
+    flex: 1,
+    alignItems: "center",
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#00bc70",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  card: {
+    backgroundColor: "#f9f9f9",
+    borderRadius: 12,
+    padding: 20,
+    width: "90%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+    gap: 14,
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+    backgroundColor: "#fff",
+    padding: 8,
+    borderRadius: 6,
+  },
+  error: {
+    color: "red",
+    textAlign: "center",
     fontSize: 14,
-    },
-    successText: {
-    color: 'green',
-    marginTop: 10,
-    textAlign: 'center',
+  },
+  success: {
+    color: "green",
+    textAlign: "center",
     fontSize: 14,
-    fontWeight: 'bold',
-    },
-
-
-}) 
+    fontWeight: "bold",
+  },
+  linkContainer: {
+    marginTop: 12,
+    alignItems: "center",
+  },
+  link: {
+    color: "#1E88E5",
+    textDecorationLine: "underline",
+  },
+});

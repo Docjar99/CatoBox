@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   titulo: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
   },
   autor: {
@@ -188,5 +188,17 @@ const styles = StyleSheet.create({
     padding: 20,
     textAlign: "center",
     fontSize: 16,
+    color: "gray",
   },
+  card: {
+    backgroundColor: "#f9f9f9",
+    borderRadius: 10,
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+
 });
