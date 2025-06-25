@@ -9,7 +9,6 @@ export function PickerR({selectedValue, onValueChange}){
       <Picker
         selectedValue={selectedValue}
         onValueChange={onValueChange}
-        style={styles.picker}
         dropdownIconColor="#1B5E20"
         
       >
@@ -62,9 +61,5 @@ const styles = StyleSheet.create({
     marginVertical: 6,
     overflow: "hidden",
   },
-  picker: {
-    height: 32,
-    paddingHorizontal: 8,
-    color: "#333",
-  },
+
 });
