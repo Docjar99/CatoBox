@@ -143,7 +143,6 @@ export function Register(){
             />
 
             <PickerR selectedValue={carrera} onValueChange={setCarrera} />
-            <View style={{ marginVertical: 6 }} />
             <PickerS selectedValue={semestre_carrera} onValueChange={setSemestre} />
 
             <CheckBoxx />
