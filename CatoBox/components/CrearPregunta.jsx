@@ -3,6 +3,9 @@ import { View, TextInput, Button, Text, StyleSheet } from "react-native";
 import { Screen } from "./Screen";
 import { supabase } from "../lib/supabase";
 import { useRouter } from "expo-router";
+import { seleccionarYSubirMedia } from "../lib/subirMedia";
+import { Image } from "react-native";
+import { Video } from 'expo-av';
 
 export function CrearPregunta() {
   const [titulo, setTitulo] = useState("");
@@ -10,6 +13,9 @@ export function CrearPregunta() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
+  const [mediaUrl, setMediaUrl] = useState(null);
+  const [mediaType, setMediaType] = useState(null);
+  const [loadingMedia, setLoadingMedia] = useState(false);
 
   const handleSubmit = async () => {
     setError("");
@@ -33,7 +39,9 @@ export function CrearPregunta() {
         titulo,
         contenido,
         fechapublicacion: new Date(),
-        estado: "activo"
+        estado: "activo",
+        media_url: mediaUrl,
+        media_type: mediaType,
       }]);
 
     if (insertError) {
@@ -42,7 +50,11 @@ export function CrearPregunta() {
       setSuccess("¡Pregunta publicada exitosamente!");
       setTitulo("");
       setContenido("");
-      setTimeout(() => router.replace("/foro"), 1500);
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          router.replace("/foro");
+        });
+      }, 1500);
     }
   };
 
@@ -69,6 +81,42 @@ export function CrearPregunta() {
             style={[styles.input, styles.area]}
             multiline
           />
+          <Button
+            title="Seleccionar imagen o video"
+            onPress={async () => {
+              setLoadingMedia(true); // empieza la carga
+              const media = await seleccionarYSubirMedia();
+              if (media) {
+                setMediaUrl(media.media_url);
+                setMediaType(media.media_type);
+              }
+              setLoadingMedia(false); // termina la carga
+            }}
+          />
+                    {loadingMedia && (
+            <Text style={{ textAlign: "center", color: "#555", marginVertical: 8 }}>
+              Se está cargando tu imagen o video, por favor espera...
+            </Text>
+          )}
+
+                    {mediaUrl && (
+            <View style={{ marginTop: 10 }}>
+              {mediaType === "image" ? (
+                <Image
+                  source={{ uri: mediaUrl }}
+                  style={{ width: "100%", height: 200, borderRadius: 10 }}
+                />
+              ) : (
+                <Video
+                  source={{ uri: mediaUrl }}
+                  useNativeControls
+                  resizeMode="contain"
+                  style={{ width: "100%", height: 300 }}
+                />
+              )}
+            </View>
+          )}
+
           {error ? <Text style={styles.error}>{error}</Text> : null}
           {success ? <Text style={styles.success}>{success}</Text> : null}
           <Button title="Publicar" color="#00bc70" onPress={handleSubmit} />

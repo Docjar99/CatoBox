@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { supabase } from "../../lib/supabase";
 import { Link } from "expo-router";
+import { TouchableOpacity, Image } from "react-native";
 
+import { Video } from "expo-av";
 
 export default function VerPregunta() {
   const { id } = useLocalSearchParams();
@@ -14,6 +16,7 @@ export default function VerPregunta() {
   const [error, setError] = useState("");
   const [userId, setUserId] = useState(null); // 🔒 nuevo
   const router = useRouter();
+  const [modalVisible, setModalVisible] = useState(false);
   const [comentarioEditandoId, setComentarioEditandoId] = useState(null);
   const [contenidoEditado, setContenidoEditado] = useState("");
   const [editandoPost, setEditandoPost] = useState(false);
@@ -34,7 +37,7 @@ export default function VerPregunta() {
     const obtenerPregunta = async () => {
       const { data, error } = await supabase
         .from("publicacionforo")
-        .select("id_usuario, titulo, contenido, fechapublicacion, usuario(nombres, apaterno)")
+        .select("id_usuario, titulo, contenido, fechapublicacion, usuario(nombres, apaterno), media_url, media_type")
         .eq("id_publicacionforo", id)
         .single();
 
@@ -201,7 +204,7 @@ export default function VerPregunta() {
       setContenidoPostEditado("");
       const { data } = await supabase
         .from("publicacionforo")
-        .select("id_usuario, titulo, contenido, fechapublicacion, usuario(nombres, apaterno)")
+        .select("id_usuario, titulo, contenido, fechapublicacion, usuario(nombres, apaterno), media_url, media_type")
         .eq("id_publicacionforo", id)
         .single();
       setPregunta(data);
@@ -285,6 +288,8 @@ export default function VerPregunta() {
       <Text style={styles.fecha}>
         Publicado el: {new Date(pregunta.fechapublicacion).toLocaleDateString()}
       </Text>
+      
+
       {editandoPost ? (
   <>
     <TextInput
@@ -311,6 +316,30 @@ export default function VerPregunta() {
 ) : (
   <>
     <Text style={styles.contenido}>{pregunta.contenido}</Text>
+          {pregunta.media_url && (
+        <View style={{ marginTop: 10 }}>
+          {pregunta.media_type === "image" ? (
+            <TouchableOpacity
+            onPress={() => router.push(`/ImagenCompleta?url=${encodeURIComponent(pregunta.media_url)}`)}
+            >
+            <Image
+              source={{ uri: pregunta.media_url }}
+              style={{ width: "100%", height: 200, borderRadius: 10 }}
+            />
+          </TouchableOpacity>
+          
+          ) : (
+            <Video
+              source={{ uri: pregunta.media_url }}
+              useNativeControls
+              resizeMode="contain"
+              style={{ width: "100%", height: 300 }}
+            />
+          )}
+        </View>
+      )}
+
+
     {userId === pregunta.id_usuario && (
       <View style={{ flexDirection: "row", gap: 10 }}>
         <Text
