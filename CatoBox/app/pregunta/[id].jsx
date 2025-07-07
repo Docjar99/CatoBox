@@ -49,11 +49,12 @@ export default function VerPregunta() {
   }, [id]);
 
   const refetchComentarios = async () => {
-    const { data, error } = await supabase
-      .from("comentariopublicacion")
-      .select("id_comentario, id_usuario, contenido, fecha, usuario(nombres, apaterno)")
-      .eq("id_publicacion", id)
-      .order("fecha", { ascending: true });
+  const { data, error } = await supabase
+    .from("comentariopublicacion")
+    .select("id_comentario, id_usuario, contenido, fecha, es_respuesta, usuario(nombres, apaterno)")
+    .eq("id_publicacion", id)
+    .order("fecha", { ascending: true });
+
 
     if (error) {
       console.error("Error al obtener comentarios:", error.message);
@@ -94,37 +95,52 @@ export default function VerPregunta() {
     }
   };
 
+  const [confirmarEliminacion, setConfirmarEliminacion] = useState(false);
+
   const eliminarPublicacion = async () => {
-    Alert.alert(
-      "¿Eliminar publicación?",
-      "Esta acción no se puede deshacer.",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: async () => {
-            const { error } = await supabase
-              .from("publicacionforo")
-              .delete()
-              .eq("id_publicacionforo", id)
-              .eq("id_usuario", userId); // opcional para seguridad extra
-  
-            if (error) {
-              Alert.alert("Error", "No se pudo eliminar la publicación.");
-              console.error("Error al eliminar publicación:", error.message);
-            } else {
-              router.back(); // vuelve al foro
-            }
-          },
-        },
-      ]
-    );
+    if (!confirmarEliminacion) {
+      Alert.alert(
+        "¿Estás seguro?",
+        "Vas a eliminar esta publicación y todos sus comentarios. Pulsa eliminar otra vez para confirmar.",
+        [{ text: "OK" }]
+      );
+      setConfirmarEliminacion(true);
+
+      // Resetear confirmación después de 5 segundos
+      setTimeout(() => setConfirmarEliminacion(false), 5000);
+      return;
+    }
+
+    const { error } = await supabase
+      .from("publicacionforo")
+      .delete()
+      .eq("id_publicacionforo", id)
+      .eq("id_usuario", userId);
+
+    if (error) {
+      Alert.alert("Error", "No se pudo eliminar la publicación.");
+      console.error("Error al eliminar publicación:", error.message);
+    } else {
+      router.back(); // vuelve al foro
+    }
   };
   
+  const [comentarioAConfirmar, setComentarioAConfirmar] = useState(null);
+
   // 🔒 Función para eliminar comentario
-  const eliminarComentario = async (id_comentario) => {
-    console.log("Eliminando comentario:", id_comentario);
+  const confirmarOEliminarComentario = async (id_comentario) => {
+    if (comentarioAConfirmar !== id_comentario) {
+      setComentarioAConfirmar(id_comentario);
+
+      Alert.alert(
+        "Confirmar eliminación",
+        "Presiona nuevamente para eliminar este comentario.",
+        [{ text: "OK" }]
+      );
+
+      setTimeout(() => setComentarioAConfirmar(null), 5000);
+      return;
+    }
 
     const { error } = await supabase
       .from("comentariopublicacion")
@@ -132,12 +148,14 @@ export default function VerPregunta() {
       .eq("id_comentario", id_comentario);
 
     if (error) {
+      Alert.alert("Error", "No se pudo eliminar el comentario.");
       console.error("Error al eliminar comentario:", error.message);
     } else {
-      console.log("Comentario eliminado con éxito");
+      setComentarioAConfirmar(null);
       refetchComentarios();
     }
   };
+
 
   const guardarEdicionComentario = async () => {
     if (!contenidoEditado.trim()) {
@@ -189,11 +207,52 @@ export default function VerPregunta() {
       setPregunta(data);
     }
   };
+
+  const marcarComoRespuesta = async (id_comentario) => {
+    // Desmarca cualquier respuesta anterior
+    await supabase
+      .from("comentariopublicacion")
+      .update({ es_respuesta: false })
+      .eq("id_publicacion", id);
+
+    // Marca este comentario como respuesta
+    const { error } = await supabase
+      .from("comentariopublicacion")
+      .update({ es_respuesta: true })
+      .eq("id_comentario", id_comentario);
+
+    if (error) {
+      Alert.alert("Error", "No se pudo marcar la respuesta.");
+      console.error(error.message);
+    } else {
+      refetchComentarios(); // recarga comentarios actualizados
+      Alert.alert("Listo", "Se marcó el comentario como respuesta.");
+    }
+  };
+
+  const desmarcarRespuesta = async () => {
+    const { error } = await supabase
+      .from("comentariopublicacion")
+      .update({ es_respuesta: false })
+      .eq("id_publicacion", id);
+
+    if (error) {
+      Alert.alert("Error", "No se pudo quitar la respuesta.");
+      console.error(error.message);
+    } else {
+      refetchComentarios();
+      Alert.alert("Listo", "Se desmarcó la respuesta.");
+    }
+  };
+
+
   
   
   if (!pregunta) {
     return <Text style={styles.cargando}>Cargando pregunta...</Text>;
   }
+
+  const esAutor = userId && pregunta && userId === pregunta.id_usuario;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -213,12 +272,14 @@ export default function VerPregunta() {
 
       <Text style={{ fontStyle: "italic" }}>
         Autor:{" "}
+        {pregunta?.id_usuario && (
         <Link
           href={`/perfilUsuario/${pregunta.id_usuario}`}
           style={{ color: "#007bff", textDecorationLine: "underline" }}
         >
           {pregunta.usuario?.nombres} {pregunta.usuario?.apaterno}
         </Link>
+        )}
       </Text>
 
       <Text style={styles.fecha}>
@@ -253,35 +314,13 @@ export default function VerPregunta() {
     {userId === pregunta.id_usuario && (
       <View style={{ flexDirection: "row", gap: 10 }}>
         <Text
-          style={styles.eliminarTexto}
-          onPress={() =>
-            Alert.alert(
-              "¿Eliminar publicación?",
-              "Esta acción eliminará también todos los comentarios.",
-              [
-                { text: "Cancelar", style: "cancel" },
-                {
-                  text: "Eliminar",
-                  style: "destructive",
-                  onPress: async () => {
-                    const { error } = await supabase
-                      .from("publicacionforo")
-                      .delete()
-                      .eq("id_publicacionforo", id)
-                      .eq("id_usuario", userId);
-
-                    if (error) {
-                      Alert.alert("Error", "No se pudo eliminar la publicación.");
-                    } else {
-                      router.back();
-                    }
-                  },
-                },
-              ]
-            )
-          }
+          style={[
+            styles.eliminarTexto,
+            confirmarEliminacion && { color: "orange", fontWeight: "bold" }
+          ]}
+          onPress={eliminarPublicacion}
         >
-          Eliminar publicación
+          {confirmarEliminacion ? "Confirmar eliminación" : "Eliminar publicación"}
         </Text>
         <Text
           style={styles.textoAccionAzul}
@@ -310,6 +349,33 @@ export default function VerPregunta() {
             <Text style={styles.comFecha}>
               {new Date(c.fecha).toLocaleDateString()}
             </Text>
+
+            {/* Si es la respuesta oficial */}
+            {c.es_respuesta && (
+              <Text style={styles.respuestaOficial}>✅ Respuesta oficial</Text>
+            )}
+
+            {esAutor && c.es_respuesta && (
+              <Text
+                style={styles.quitarRespuestaTexto}
+                onPress={() => desmarcarRespuesta()}
+              >
+                Quitar respuesta
+              </Text>
+            )}
+
+            <Text>{c.contenido}</Text>
+
+            {/* Mostrar botón solo al autor del post */}
+            {pregunta && userId && userId === pregunta.id_usuario && !c.es_respuesta && (
+
+              <Text
+                style={styles.marcarTexto}
+                onPress={() => marcarComoRespuesta(c.id_comentario)}
+              >
+                Marcar como respuesta
+              </Text>
+            )}
         
             {comentarioEditandoId === c.id_comentario ? (
               <>
@@ -336,29 +402,20 @@ export default function VerPregunta() {
               </>
             ) : (
               <>
-                <Text>{c.contenido}</Text>
+                
         
                 {userId === c.id_usuario && (
                   <View style={{ flexDirection: "row", gap: 10 }}>
                     <Text
-                      style={styles.eliminarTexto}
-                      onPress={() =>
-                        Alert.alert(
-                          "¿Eliminar comentario?",
-                          "Esta acción no se puede deshacer.",
-                          [
-                            { text: "Cancelar", style: "cancel" },
-                            {
-                              text: "Eliminar",
-                              style: "destructive",
-                              onPress: () => eliminarComentario(c.id_comentario),
-                            },
-                          ]
-                        )
-                      }
+                      style={[
+                        styles.eliminarTexto,
+                        comentarioAConfirmar === c.id_comentario && { color: "orange", fontWeight: "bold" }
+                      ]}
+                      onPress={() => confirmarOEliminarComentario(c.id_comentario)}
                     >
-                      Eliminar
+                      {comentarioAConfirmar === c.id_comentario ? "Confirmar eliminación" : "Eliminar"}
                     </Text>
+
                     <Text
                       style={styles.textoAccionAzul}
                       onPress={() => {
@@ -440,6 +497,32 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
+  },
+
+  respuestaOficial: {
+    backgroundColor: "#d0f0c0",
+    color: "#006400",
+    fontWeight: "bold",
+    padding: 4,
+    borderRadius: 4,
+    marginVertical: 4,
+    alignSelf: "flex-start",
+  },
+
+  marcarTexto: {
+    color: "#008000",
+    textDecorationLine: "underline",
+    fontSize: 12,
+    marginTop: 4,
+    alignSelf: "flex-start",
+  },
+
+  quitarRespuestaTexto: {
+    color: "#cc7000", // naranja oscuro
+    textDecorationLine: "underline",
+    fontSize: 12,
+    marginTop: 4,
+    alignSelf: "flex-start",
   },
   
 });
