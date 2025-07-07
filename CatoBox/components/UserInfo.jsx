@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 
 export function UserInfo() {
   const [userData, setUserData] = useState(null);
+  const [userId, setUserId] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -17,6 +18,8 @@ export function UserInfo() {
         console.error("No se pudo obtener el usuario autenticado");
         return;
       }
+
+      setUserId(user.id);
 
       const { data, error } = await supabase
         .from("usuario")
@@ -31,6 +34,7 @@ export function UserInfo() {
       }
     };
 
+
     fetchUserData();
   }, []);
 
@@ -42,6 +46,25 @@ export function UserInfo() {
       router.replace("/login");
     }
   };
+
+  const [notificaciones, setNotificaciones] = useState([]);
+
+  useEffect(() => {
+    const obtenerNotificaciones = async () => {
+      if (!userId) return;
+      const { data, error } = await supabase
+        .from("notificacion")
+        .select("contenido, fecha, id_publicacion")
+        .eq("id_destinatario", userId)
+        .eq("leida", false)
+        .order("fecha", { ascending: false });
+
+      if (!error) setNotificaciones(data);
+    };
+
+    obtenerNotificaciones();
+  }, [userId]);
+
 
   return (
     <Screen>
@@ -71,6 +94,24 @@ export function UserInfo() {
             <Text style={styles.loading}>Cargando perfil...</Text>
           )}
         </View>
+        <Text style={styles.label}>🔔 Historial de notificaciones</Text>
+        {notificaciones.length > 0 ? (
+          <View style={styles.notificacionesBox}>
+            {notificaciones.map((n, i) => (
+              <View key={i} style={styles.notificacionItem}>
+                <Text style={styles.notifTexto}>{n.contenido}</Text>
+                <Text style={styles.notifFecha}>
+                  {new Date(n.fecha).toLocaleDateString()}
+                </Text>
+              </View>
+            ))}
+          </View>
+        ) : (
+          <Text style={styles.notifTexto}>No tienes notificaciones por ahora.</Text>
+        )}
+
+
+
 
         <Pressable style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutText}>Cerrar sesión</Text>
@@ -131,4 +172,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+
+notificacionesBox: {
+  marginTop: 20,
+  width: "100%",
+  backgroundColor: "#eef6f2",
+  borderRadius: 8,
+  padding: 10,
+},
+
+notificacionItem: {
+  borderBottomWidth: 1,
+  borderBottomColor: "#ddd",
+  paddingVertical: 8,
+},
+
+notifTexto: {
+  fontSize: 14,
+  color: "#333",
+},
+
+notifFecha: {
+  fontSize: 12,
+  color: "#777",
+  marginTop: 2,
+},
+
 });
