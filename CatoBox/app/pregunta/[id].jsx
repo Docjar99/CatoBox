@@ -23,7 +23,6 @@ export default function VerPregunta() {
   const [contenidoPostEditado, setContenidoPostEditado] = useState("");
   const [tituloPostEditado, setTituloPostEditado] = useState("");
 
-
   useEffect(() => {
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -288,7 +287,11 @@ export default function VerPregunta() {
       <Text style={styles.fecha}>
         Publicado el: {new Date(pregunta.fechapublicacion).toLocaleDateString()}
       </Text>
-      
+      <Text style={{ color: "gray", fontSize: 13, marginBottom: 6 }}>
+        Año: {pregunta.anio} · Curso: {pregunta.curso}
+      </Text>
+
+            
 
       {editandoPost ? (
   <>

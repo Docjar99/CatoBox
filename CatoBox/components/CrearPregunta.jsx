@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import { seleccionarYSubirMedia } from "../lib/subirMedia";
 import { Image } from "react-native";
 import { Video } from 'expo-av';
+import { Picker } from "@react-native-picker/picker";
 
 export function CrearPregunta() {
   const [titulo, setTitulo] = useState("");
@@ -16,6 +17,20 @@ export function CrearPregunta() {
   const [mediaUrl, setMediaUrl] = useState(null);
   const [mediaType, setMediaType] = useState(null);
   const [loadingMedia, setLoadingMedia] = useState(false);
+  const [anio, setAnio] = useState("");
+  const [curso, setCurso] = useState("");
+
+  
+
+  const anios = ["1", "2", "3", "4", "5"];
+  const cursos = [
+    "Gestión de procesos de negocios",
+    "Tecnologías móviles",
+    "Interacción Humano-Computador",
+    "Sistemas Inteligentes",
+    "General",
+  ];
+
 
   const handleSubmit = async () => {
     setError("");
@@ -23,6 +38,11 @@ export function CrearPregunta() {
 
     if (!titulo || !contenido) {
       setError("Por favor completa todos los campos.");
+      return;
+    }
+
+    if (!anio || !curso) {
+      setError("Por favor selecciona el año y el curso.");
       return;
     }
 
@@ -42,6 +62,8 @@ export function CrearPregunta() {
         estado: "activo",
         media_url: mediaUrl,
         media_type: mediaType,
+        anio,
+        curso,
       }]);
 
     if (insertError) {
@@ -81,6 +103,30 @@ export function CrearPregunta() {
             style={[styles.input, styles.area]}
             multiline
           />
+
+          <Text style={{ marginTop: 10, fontWeight: "bold" }}>Año:</Text>
+          <Picker
+            selectedValue={anio}
+            onValueChange={(itemValue) => setAnio(itemValue)}
+          >
+            <Picker.Item label="Selecciona un año" value="" />
+            {anios.map((a) => (
+              <Picker.Item label={`Año ${a}`} value={a} key={a} />
+            ))}
+          </Picker>
+
+          <Text style={{ marginTop: 10, fontWeight: "bold" }}>Curso:</Text>
+          <Picker
+            selectedValue={curso}
+            onValueChange={(itemValue) => setCurso(itemValue)}
+          >
+            <Picker.Item label="Selecciona un curso" value="" />
+            {cursos.map((c) => (
+              <Picker.Item label={c} value={c} key={c} />
+            ))}
+          </Picker>
+
+
           <Button
             title="Seleccionar imagen o video"
             onPress={async () => {
@@ -119,6 +165,8 @@ export function CrearPregunta() {
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
           {success ? <Text style={styles.success}>{success}</Text> : null}
+         
+
           <Button title="Publicar" color="#00bc70" onPress={handleSubmit} />
         </View>
       </View>
