@@ -11,24 +11,24 @@ export function ForoU() {
 
   const anios = ["1", "2", "3", "4", "5"];
   const cursoAnios = {
-    "Gestión de Procesos de Negocio": "4",
-    "Tecnologías Móviles": "4",
-    "Interacción Humano-Computador": "4",
-    "Sistemas Inteligentes": "4",
-    "Estadística y Probabilidades": "3",
-    "Cálculo": "1",
-    "Física": "1",
-    "Lenguajes de Programación I": "1",
-    "Fundamentos de Sistemas de Información": "2",
-    "Computación en Red I": "2",
-    "Análisis y Diseño de Sistemas": "3",
-    "Infraestructura de Tecnologías de la Información": "3",
-    "Sistemas Operativos": "4",
-    "Big Data": "5",
-    "Auditoría de Sistemas": "5",
-    "Seguridad Informática": "5",
-    "Proyecto de Fin de Carrera": "5",
     "General": "", // General no tiene año
+    "Análisis y Diseño de Sistemas": "3",
+    "Auditoría de Sistemas": "5",
+    "Big Data": "5",
+    "Cálculo": "1",
+    "Computación en Red I": "2",
+    "Estadística y Probabilidades": "3",
+    "Física": "1",
+    "Fundamentos de Sistemas de Información": "2",
+    "Gestión de Procesos de Negocio": "4",
+    "Infraestructura de Tecnologías de la Información": "3",
+    "Interacción Humano-Computador": "4",
+    "Lenguajes de Programación I": "1",
+    "Proyecto de Fin de Carrera": "5",
+    "Tecnologías Móviles": "4",
+    "Seguridad Informática": "5",
+    "Sistemas Inteligentes": "4",
+    "Sistemas Operativos": "4",
   };
 
   const cursosFiltrados = Object.entries(cursoAnios).filter(

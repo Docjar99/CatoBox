@@ -7,6 +7,7 @@ import { Link } from "expo-router";
 import { TouchableOpacity, Image } from "react-native";
 
 import { Video } from "expo-av";
+import { Filter} from "bad-words";
 
 export default function VerPregunta() {
   const { id } = useLocalSearchParams();
@@ -22,6 +23,25 @@ export default function VerPregunta() {
   const [editandoPost, setEditandoPost] = useState(false);
   const [contenidoPostEditado, setContenidoPostEditado] = useState("");
   const [tituloPostEditado, setTituloPostEditado] = useState("");
+
+    const spanishBadWords = [
+    'puta', 'mierda', 'cabrón', 'pendejo', 'verga', 'joder', 'coño', 'maricón', 
+    'chingar', 'pito', 'culero', 'pendejada', 'estúpido', 'idiota', 'imbécil',
+    'malparido', 'hijueputa', 'gonorrea', 'careverga', 'güevón', 'hpta', 'ptmr',
+    'malparida', 'puto', 'marica', 'pendeja', 'zorra', 'prostituta', 'cabrona',
+    'cerdo', 'bastardo', 'animal', 'asqueroso', 'desgraciado', 'estupida', 'idiota'
+  ];
+
+  // Crear instancia del filtro
+  const filtro = new Filter({ 
+    list: spanishBadWords
+  });
+  const verificarContenido = (texto) => {
+    if (filtro.isProfane(texto)) {
+      return "El contenido contiene lenguaje inapropiado. Por favor, modifícalo.";
+    }
+    return null;
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -70,6 +90,15 @@ export default function VerPregunta() {
   }, [id]);
 
   const publicarComentario = async () => {
+    const errorGroseria = verificarContenido(nuevoComentario);
+    if (errorGroseria) {
+      Alert.alert(
+        "Contenido inapropiado detectado",
+        errorGroseria,
+        [{ text: "Entendido" }]
+      );
+      return;
+    }
     setError("");
     if (!nuevoComentario.trim()) {
       setError("El comentario no puede estar vacío.");
@@ -164,7 +193,15 @@ export default function VerPregunta() {
       Alert.alert("El contenido no puede estar vacío.");
       return;
     }
-  
+    const errorGroseria = verificarContenido(contenidoEditado);
+    if (errorGroseria) {
+      Alert.alert(
+        "Contenido inapropiado detectado",
+        errorGroseria,
+        [{ text: "Entendido" }]
+      );
+      return;
+    }
     const { error } = await supabase
       .from("comentariopublicacion")
       .update({ contenido: contenidoEditado })
@@ -185,7 +222,17 @@ export default function VerPregunta() {
       Alert.alert("El título y el contenido no pueden estar vacíos.");
       return;
     }
-  
+    const errorTitulo = verificarContenido(tituloPostEditado);
+    const errorContenido = verificarContenido(contenidoPostEditado);
+    
+    if (errorTitulo || errorContenido) {
+      Alert.alert(
+        "Contenido inapropiado detectado",
+        errorTitulo || errorContenido,
+        [{ text: "Entendido" }]
+      );
+      return;
+    }
     const { error } = await supabase
       .from("publicacionforo")
       .update({

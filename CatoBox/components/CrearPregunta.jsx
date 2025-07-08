@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet } from "react-native";
+import { Alert, View, TextInput, Button, Text, StyleSheet } from "react-native";
 import { Screen } from "./Screen";
 import { supabase } from "../lib/supabase";
 import { useRouter } from "expo-router";
@@ -7,6 +7,8 @@ import { seleccionarYSubirMedia } from "../lib/subirMedia";
 import { Image } from "react-native";
 import { Video } from 'expo-av';
 import { Picker } from "@react-native-picker/picker";
+
+import { Filter } from "bad-words";
 
 export function CrearPregunta() {
   const [titulo, setTitulo] = useState("");
@@ -23,31 +25,69 @@ export function CrearPregunta() {
 
   const anios = ["1", "2", "3", "4", "5"];
   const cursoAnios = {
-    "Gestión de Procesos de Negocio": "4",
-    "Tecnologías Móviles": "4",
-    "Interacción Humano-Computador": "4",
-    "Sistemas Inteligentes": "4",
-    "Estadística y Probabilidades": "3",
-    "Cálculo": "1",
-    "Física": "1",
-    "Lenguajes de Programación I": "1",
-    "Fundamentos de Sistemas de Información": "2",
-    "Computación en Red I": "2",
+    "General": "", // General no tiene año
     "Análisis y Diseño de Sistemas": "3",
-    "Infraestructura de Tecnologías de la Información": "3",
-    "Sistemas Operativos": "4",
-    "Big Data": "5",
     "Auditoría de Sistemas": "5",
-    "Seguridad Informática": "5",
+    "Big Data": "5",
+    "Cálculo": "1",
+    "Computación en Red I": "2",
+    "Estadística y Probabilidades": "3",
+    "Física": "1",
+    "Fundamentos de Sistemas de Información": "2",
+    "Gestión de Procesos de Negocio": "4",
+    "Infraestructura de Tecnologías de la Información": "3",
+    "Interacción Humano-Computador": "4",
+    "Lenguajes de Programación I": "1",
     "Proyecto de Fin de Carrera": "5",
-    "General": "",
+    "Tecnologías Móviles": "4",
+    "Seguridad Informática": "5",
+    "Sistemas Inteligentes": "4",
+    "Sistemas Operativos": "4",
   };
   
+// Configuración del filtro de groserías con lista en español
+  const spanishBadWords = [
+    'puta', 'mierda', 'cabrón', 'pendejo', 'verga', 'joder', 'coño', 'maricón', 
+    'chingar', 'pito', 'culero', 'pendejada', 'estúpido', 'idiota', 'imbécil',
+    'malparido', 'hijueputa', 'gonorrea', 'careverga', 'güevón', 'hpta', 'ptmr',
+    'malparida', 'puto', 'marica', 'pendeja', 'zorra', 'prostituta', 'cabrona',
+    'cerdo', 'bastardo', 'animal', 'asqueroso', 'desgraciado', 'estupida', 'idiota'
+  ];
+  
+  const filtro = new Filter({ 
+    list: spanishBadWords
+  });
+  
 
+  const verificarContenido = () => {
+    // Verificar título
+    if (filtro.isProfane(titulo)) {
+      return `El título contiene lenguaje inapropiado: "${filtro.clean(titulo)}"`;
+    }
+    
+    // Verificar contenido
+    if (filtro.isProfane(contenido)) {
+      return `El contenido contiene lenguaje inapropiado: "${filtro.clean(contenido)}"`;
+    }
+    
+    return null;
+  };
 
   const handleSubmit = async () => {
     setError("");
     setSuccess("");
+
+   // Verificar contenido inapropiado
+    const errorGroseria = verificarContenido();
+    if (errorGroseria) {
+      Alert.alert(
+        "Contenido inapropiado detectado",
+        errorGroseria + "\n\nPor favor, modifica tu publicación para cumplir con nuestras normas de comunidad.",
+        [{ text: "Entendido" }]
+      );
+      setError(errorGroseria);
+      return;
+    }
 
     if (!titulo || !contenido) {
       setError("Por favor completa todos los campos.");
@@ -58,8 +98,6 @@ export function CrearPregunta() {
       setError("Por favor selecciona un curso.");
       return;
     }
-    
-    
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) {
@@ -131,7 +169,7 @@ export function CrearPregunta() {
             setAnioAuto(anioDetectado);
           }}
         >
-          <Picker.Item label="Selecciona un curso" value="" />
+          <Picker.Item label="Selecciona un curso" value="" enabled={false}/>
           {Object.entries(cursoAnios).map(([curso, anio]) => (
             <Picker.Item
               key={curso}
