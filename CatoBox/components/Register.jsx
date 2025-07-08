@@ -1,4 +1,4 @@
-import { Alert, Button,Text, TextInput, StyleSheet, View } from 'react-native';
+import { Alert, Button,Text, TextInput, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Screen } from "./Screen";
 import { Link } from "expo-router";
 import { EyeClosedIcon } from "./Icons";
@@ -8,7 +8,7 @@ import { CheckBoxx } from "./CheckBoxx";
 import React, { useState } from "react";
 import { supabase } from "../lib/supabase";
 
-
+import {EyeOpenIcon} from "./Icons"
 
 export function Register(){
     const[nombres, setNombres]= useState('')
@@ -127,20 +127,37 @@ export function Register(){
                 value={email}
                 autoCapitalize="none"
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Contraseña"
-                onChangeText={(text) => setPassword(text)}
-                value={password}
-                secureTextEntry
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Confirmar contraseña"
-                onChangeText={(text) => setConfirm(text)}
-                value={confirm}
-                secureTextEntry
-            />
+            <View >
+                <TextInput
+                    style={styles.passwordInput}
+                    placeholder="Contraseña"
+                    onChangeText={(text) => setPassword(text)}
+                    value={password}
+                    secureTextEntry={!showPassword}
+                />
+                <TouchableOpacity 
+                    style={styles.eyeButton}
+                    onPress={() => setShowPassword(!showPassword)}
+                >
+                    {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                </TouchableOpacity>
+            </View>
+            
+            <View>
+                <TextInput
+                    style={styles.passwordInput}
+                    placeholder="Confirmar contraseña"
+                    onChangeText={(text) => setConfirm(text)}
+                    value={confirm}
+                    secureTextEntry={!showConfirm}
+                />
+                <TouchableOpacity 
+                    style={styles.eyeButton}
+                    onPress={() => setShowConfirm(!showConfirm)}
+                >
+                    {showConfirm ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                </TouchableOpacity>
+            </View>
 
             <PickerR selectedValue={carrera} onValueChange={setCarrera} />
             <PickerS selectedValue={semestre_carrera} onValueChange={setSemestre} />
