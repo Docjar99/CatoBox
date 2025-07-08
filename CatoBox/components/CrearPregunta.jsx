@@ -17,19 +17,31 @@ export function CrearPregunta() {
   const [mediaUrl, setMediaUrl] = useState(null);
   const [mediaType, setMediaType] = useState(null);
   const [loadingMedia, setLoadingMedia] = useState(false);
-  const [anio, setAnio] = useState("");
-  const [curso, setCurso] = useState("");
-
+  const [cursoSeleccionado, setCursoSeleccionado] = useState("");
+  const [anioAuto, setAnioAuto] = useState("");
   
 
   const anios = ["1", "2", "3", "4", "5"];
-  const cursos = [
-    "Gestión de procesos de negocios",
-    "Tecnologías móviles",
-    "Interacción Humano-Computador",
-    "Sistemas Inteligentes",
-    "General",
-  ];
+  const cursoAnios = {
+    "Gestión de Procesos de Negocio": "4",
+    "Tecnologías Móviles": "4",
+    "Interacción Humano-Computador": "4",
+    "Sistemas Inteligentes": "4",
+    "Estadística y Probabilidades": "3",
+    "Cálculo": "1",
+    "Física": "1",
+    "Lenguajes de Programación I": "1",
+    "Fundamentos de Sistemas de Información": "2",
+    "Computación en Red I": "2",
+    "Análisis y Diseño de Sistemas": "3",
+    "Infraestructura de Tecnologías de la Información": "3",
+    "Sistemas Operativos": "4",
+    "Big Data": "5",
+    "Auditoría de Sistemas": "5",
+    "Seguridad Informática": "5",
+    "Proyecto de Fin de Carrera": "5",
+  };
+  
 
 
   const handleSubmit = async () => {
@@ -41,10 +53,11 @@ export function CrearPregunta() {
       return;
     }
 
-    if (!anio || !curso) {
-      setError("Por favor selecciona el año y el curso.");
+    if (!cursoSeleccionado || !anioAuto) {
+      setError("Por favor selecciona un curso válido.");
       return;
     }
+    
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) {
@@ -62,8 +75,9 @@ export function CrearPregunta() {
         estado: "activo",
         media_url: mediaUrl,
         media_type: mediaType,
-        anio,
-        curso,
+        curso: cursoSeleccionado,
+        anio: anioAuto,
+
       }]);
 
     if (insertError) {
@@ -72,6 +86,8 @@ export function CrearPregunta() {
       setSuccess("¡Pregunta publicada exitosamente!");
       setTitulo("");
       setContenido("");
+      setCursoSeleccionado("");
+      setAnioAuto("");
       setTimeout(() => {
         requestAnimationFrame(() => {
           router.replace("/foro");
@@ -106,26 +122,29 @@ export function CrearPregunta() {
 
           <Text style={{ marginTop: 10, fontWeight: "bold" }}>Año:</Text>
           <Picker
-            selectedValue={anio}
-            onValueChange={(itemValue) => setAnio(itemValue)}
-          >
-            <Picker.Item label="Selecciona un año" value="" />
-            {anios.map((a) => (
-              <Picker.Item label={`Año ${a}`} value={a} key={a} />
-            ))}
-          </Picker>
-
-          <Text style={{ marginTop: 10, fontWeight: "bold" }}>Curso:</Text>
-          <Picker
-            selectedValue={curso}
-            onValueChange={(itemValue) => setCurso(itemValue)}
+            selectedValue={cursoSeleccionado}
+            onValueChange={(itemValue) => {
+              setCursoSeleccionado(itemValue);
+              const anioDetectado = cursoAnios[itemValue] || "";
+              setAnioAuto(anioDetectado);
+            }}
           >
             <Picker.Item label="Selecciona un curso" value="" />
-            {cursos.map((c) => (
-              <Picker.Item label={c} value={c} key={c} />
-            ))}
+            {Object.entries(cursoAnios).map(([curso, anio]) => (
+            <Picker.Item
+              key={curso}
+              label={`${curso} (${anio}° año)`}
+              value={curso}
+            />
+          ))}
           </Picker>
 
+          <Text style={{ fontWeight: "bold", marginTop: 10 }}>Año detectado:</Text>
+          <TextInput
+            value={anioAuto}
+            editable={false}
+            style={[styles.input, { backgroundColor: "#eee" }]}
+          />
 
           <Button
             title="Seleccionar imagen o video"

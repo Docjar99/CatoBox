@@ -8,17 +8,33 @@ export function ForoU() {
   const [publicaciones, setPublicaciones] = useState([]);
   const [filtroAnio, setFiltroAnio] = useState("");
   const [filtroCurso, setFiltroCurso] = useState("");
-  
-  
+
   const anios = ["1", "2", "3", "4", "5"];
-  const cursos = [
-    "Gestión de procesos de negocios",
-    "Tecnologías móviles",
-    "Interacción Humano-Computador",
-    "Sistemas Inteligentes",
-    "General",
-  ];
-  
+  const cursoAnios = {
+    "Gestión de Procesos de Negocio": "4",
+    "Tecnologías Móviles": "4",
+    "Interacción Humano-Computador": "4",
+    "Sistemas Inteligentes": "4",
+    "Estadística y Probabilidades": "3",
+    "Cálculo": "1",
+    "Física": "1",
+    "Lenguajes de Programación I": "1",
+    "Fundamentos de Sistemas de Información": "2",
+    "Computación en Red I": "2",
+    "Análisis y Diseño de Sistemas": "3",
+    "Infraestructura de Tecnologías de la Información": "3",
+    "Sistemas Operativos": "4",
+    "Big Data": "5",
+    "Auditoría de Sistemas": "5",
+    "Seguridad Informática": "5",
+    "Proyecto de Fin de Carrera": "5",
+    "General": "", // General no tiene año
+  };
+
+  const cursosFiltrados = Object.entries(cursoAnios).filter(
+    ([curso, anio]) => !filtroAnio || anio === filtroAnio || curso === "General"
+  );
+
   const agruparPorAnio = (publicaciones) => {
     return publicaciones.reduce((grupo, pub) => {
       const anio = pub.anio || "Sin año";
@@ -27,39 +43,34 @@ export function ForoU() {
       return grupo;
     }, {});
   };
-  
 
   const cargarPublicaciones = async () => {
     let query = supabase
       .from("publicacionforo")
       .select("id_publicacionforo, titulo, fechapublicacion, anio, curso, usuario(nombres, apaterno, id_usuario)")
       .order("fechapublicacion", { ascending: false });
-  
+
     if (filtroAnio) query = query.eq("anio", filtroAnio);
     if (filtroCurso) query = query.eq("curso", filtroCurso);
-  
+
     const { data, error } = await query;
-  
+
     if (error) {
       console.error("Error al obtener publicaciones:", error);
     } else {
       setPublicaciones(data);
     }
   };
-  
 
-  //  Recarga cada vez que se enfoca la vista
   useFocusEffect(
     useCallback(() => {
       cargarPublicaciones();
     }, [])
   );
 
-  // También carga inicialmente al montar el componente
   useEffect(() => {
     cargarPublicaciones();
   }, [filtroAnio, filtroCurso]);
-  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -72,7 +83,11 @@ export function ForoU() {
       <Text style={{ marginTop: 10, fontWeight: "bold" }}>Año:</Text>
       <Picker
         selectedValue={filtroAnio}
-        onValueChange={(itemValue) => setFiltroAnio(itemValue)}
+        onValueChange={(itemValue) => {
+          setFiltroAnio(itemValue);
+          setFiltroCurso("");
+          cargarPublicaciones();
+        }}
       >
         <Picker.Item label="Selecciona un año" value="" />
         {anios.map((a) => (
@@ -83,13 +98,19 @@ export function ForoU() {
       <Text style={{ marginTop: 10, fontWeight: "bold" }}>Curso:</Text>
       <Picker
         selectedValue={filtroCurso}
-        onValueChange={(itemValue) => setFiltroCurso(itemValue)}
+        onValueChange={(itemValue) => {
+          setFiltroCurso(itemValue);
+          const anioDetectado = cursoAnios[itemValue] || "";
+          setFiltroAnio(anioDetectado);
+          cargarPublicaciones();
+        }}
       >
         <Picker.Item label="Selecciona un curso" value="" />
-        {cursos.map((c) => (
-          <Picker.Item label={c} value={c} key={c} />
+        {cursosFiltrados.map(([curso]) => (
+          <Picker.Item label={curso} value={curso} key={curso} />
         ))}
       </Picker>
+
       <Text
         onPress={() => {
           setFiltroAnio("");
@@ -101,28 +122,28 @@ export function ForoU() {
       </Text>
 
       {publicaciones.length === 0 ? (
-  <Text style={styles.noData}>No hay publicaciones.</Text>
-) : (
-  Object.entries(agruparPorAnio(publicaciones)).map(([anio, posts]) => (
-    <View key={anio}>
-      <Text style={styles.seccionTitulo}>Año {anio}</Text>
-      {posts.map((p) => (
-        <View key={p.id_publicacionforo} style={styles.card}>
-          <Link href={`/pregunta/${p.id_publicacionforo}`}>
-            <Text style={styles.pregunta}>{p.titulo}</Text>
-          </Link>
-          <Text style={styles.autor}>
-            {p.usuario?.nombres} {p.usuario?.apaterno}
-          </Text>
-          <Text style={styles.fecha}>
-            {new Date(p.fechapublicacion).toLocaleDateString()}
-          </Text>
-          <Text style={styles.curso}>{p.curso}</Text>
-        </View>
-      ))}
-    </View>
-  ))
-)}
+        <Text style={styles.noData}>No hay publicaciones.</Text>
+      ) : (
+        Object.entries(agruparPorAnio(publicaciones)).map(([anio, posts]) => (
+          <View key={anio}>
+            <Text style={styles.seccionTitulo}>Año {anio}</Text>
+            {posts.map((p) => (
+              <View key={p.id_publicacionforo} style={styles.card}>
+                <Link href={`/pregunta/${p.id_publicacionforo}`}>
+                  <Text style={styles.pregunta}>{p.titulo}</Text>
+                </Link>
+                <Text style={styles.autor}>
+                  {p.usuario?.nombres} {p.usuario?.apaterno}
+                </Text>
+                <Text style={styles.fecha}>
+                  {new Date(p.fechapublicacion).toLocaleDateString()}
+                </Text>
+                <Text style={styles.curso}>{p.curso}</Text>
+              </View>
+            ))}
+          </View>
+        ))
+      )}
     </ScrollView>
   );
 }
@@ -135,11 +156,11 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 10,
-    color: "#00bc70", // verde oscuro
+    color: "#00bc70",
     textAlign: "center",
   },
   link: {
-    backgroundColor: "#66BB6A", // verde más claro
+    backgroundColor: "#66BB6A",
     color: "white",
     paddingVertical: 10,
     paddingHorizontal: 14,
@@ -163,7 +184,7 @@ const styles = StyleSheet.create({
   pregunta: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#2E7D32", // texto verde más fuerte
+    color: "#2E7D32",
   },
   autor: {
     fontSize: 14,
@@ -186,7 +207,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 20,
     marginBottom: 6,
-    color: "#388E3C", // verde oscuro
+    color: "#388E3C",
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
     paddingBottom: 4,
@@ -196,5 +217,4 @@ const styles = StyleSheet.create({
     color: "#777",
     marginTop: 2,
   },
-  
 });
