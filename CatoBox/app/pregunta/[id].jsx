@@ -261,7 +261,7 @@ export default function VerPregunta() {
       <Text style={styles.volver} onPress={() => router.back()}>
         ← Volver al foro
       </Text>
-  
+      <View style={styles.card}>
       {editandoPost ? (
         <TextInput
           value={tituloPostEditado}
@@ -368,115 +368,119 @@ export default function VerPregunta() {
     )}
   </>
 )}
+</View>
+
 
       <Text style={styles.subtitulo}>Comentarios</Text>
-      {comentarios.length === 0 ? (
-        <Text style={styles.noComentarios}>Aún no hay comentarios.</Text>
-      ) : (
-        comentarios.map((c, index) => (
-          <View key={index} style={styles.comentario}>
-            <Text style={styles.comAutor}>
-              {c.usuario?.nombres} {c.usuario?.apaterno}
-            </Text>
-            <Text style={styles.comFecha}>
-              {new Date(c.fecha).toLocaleDateString()}
-            </Text>
-
-            {/* Si es la respuesta oficial */}
-            {c.es_respuesta && (
-              <Text style={styles.respuestaOficial}>✅ Respuesta oficial</Text>
-            )}
-
-            {esAutor && c.es_respuesta && (
-              <Text
-                style={styles.quitarRespuestaTexto}
-                onPress={() => desmarcarRespuesta()}
-              >
-                Quitar respuesta
+      <View style={styles.card}>
+        {comentarios.length === 0 ? (
+          <Text style={styles.noComentarios}>Aún no hay comentarios.</Text>
+        ) : (
+          comentarios.map((c, index) => (
+            <View key={index} style={styles.comentario}>
+              <Text style={styles.comAutor}>
+                {c.usuario?.nombres} {c.usuario?.apaterno}
               </Text>
-            )}
-
-            <Text>{c.contenido}</Text>
-
-            {/* Mostrar botón solo al autor del post */}
-            {pregunta && userId && userId === pregunta.id_usuario && !c.es_respuesta && (
-
-              <Text
-                style={styles.marcarTexto}
-                onPress={() => marcarComoRespuesta(c.id_comentario)}
-              >
-                Marcar como respuesta
+              <Text style={styles.comFecha}>
+                {new Date(c.fecha).toLocaleDateString()}
               </Text>
-            )}
-        
-            {comentarioEditandoId === c.id_comentario ? (
-              <>
-                <TextInput
-                  value={contenidoEditado}
-                  onChangeText={setContenidoEditado}
-                  style={styles.input}
-                  multiline
-                />
-                <View style={{ flexDirection: "row", gap: 10 }}>
-                  <Text style={styles.textoAccionAzul} onPress={guardarEdicionComentario}>
-                    Guardar
-                  </Text>
-                  <Text
-                    style={styles.eliminarTexto}
-                    onPress={() => {
-                      setComentarioEditandoId(null);
-                      setContenidoEditado("");
-                    }}
-                  >
-                    Cancelar
-                  </Text>
-                </View>
-              </>
-            ) : (
-              <>
-                
-        
-                {userId === c.id_usuario && (
+
+              {/* Si es la respuesta oficial */}
+              {c.es_respuesta && (
+                <Text style={styles.respuestaOficial}>✅ Respuesta oficial</Text>
+              )}
+
+              {esAutor && c.es_respuesta && (
+                <Text
+                  style={styles.quitarRespuestaTexto}
+                  onPress={() => desmarcarRespuesta()}
+                >
+                  Quitar respuesta
+                </Text>
+              )}
+
+              <Text>{c.contenido}</Text>
+
+              {/* Mostrar botón solo al autor del post */}
+              {pregunta && userId && userId === pregunta.id_usuario && !c.es_respuesta && (
+
+                <Text
+                  style={styles.marcarTexto}
+                  onPress={() => marcarComoRespuesta(c.id_comentario)}
+                >
+                  Marcar como respuesta
+                </Text>
+              )}
+          
+              {comentarioEditandoId === c.id_comentario ? (
+                <>
+                  <TextInput
+                    value={contenidoEditado}
+                    onChangeText={setContenidoEditado}
+                    style={styles.input}
+                    multiline
+                  />
                   <View style={{ flexDirection: "row", gap: 10 }}>
-                    <Text
-                      style={[
-                        styles.eliminarTexto,
-                        comentarioAConfirmar === c.id_comentario && { color: "orange", fontWeight: "bold" }
-                      ]}
-                      onPress={() => confirmarOEliminarComentario(c.id_comentario)}
-                    >
-                      {comentarioAConfirmar === c.id_comentario ? "Confirmar eliminación" : "Eliminar"}
+                    <Text style={styles.textoAccionAzul} onPress={guardarEdicionComentario}>
+                      Guardar
                     </Text>
-
                     <Text
-                      style={styles.textoAccionAzul}
+                      style={styles.eliminarTexto}
                       onPress={() => {
-                        setComentarioEditandoId(c.id_comentario);
-                        setContenidoEditado(c.contenido);
+                        setComentarioEditandoId(null);
+                        setContenidoEditado("");
                       }}
                     >
-                      Editar
+                      Cancelar
                     </Text>
                   </View>
-                )}
-              </>
-            )}
-          </View>
-        ))
-        
-      )}
-  
-      <TextInput
-        placeholder="Escribe un comentario..."
-        value={nuevoComentario}
-        onChangeText={setNuevoComentario}
-        style={styles.input}
-        multiline
-      />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <Pressable style={styles.botonVerde} onPress={publicarComentario}>
-  <Text style={styles.textoBotonVerde}>Comentar</Text>
-</Pressable>
+                </>
+              ) : (
+                <>
+                  
+          
+                  {userId === c.id_usuario && (
+                    <View style={{ flexDirection: "row", gap: 10 }}>
+                      <Text
+                        style={[
+                          styles.eliminarTexto,
+                          comentarioAConfirmar === c.id_comentario && { color: "orange", fontWeight: "bold" }
+                        ]}
+                        onPress={() => confirmarOEliminarComentario(c.id_comentario)}
+                      >
+                        {comentarioAConfirmar === c.id_comentario ? "Confirmar eliminación" : "Eliminar"}
+                      </Text>
+
+                      <Text
+                        style={styles.textoAccionAzul}
+                        onPress={() => {
+                          setComentarioEditandoId(c.id_comentario);
+                          setContenidoEditado(c.contenido);
+                        }}
+                      >
+                        Editar
+                      </Text>
+                    </View>
+                  )}
+                </>
+              )}
+            </View>
+          ))
+          
+        )}
+    
+        <TextInput
+          placeholder="Escribe un comentario..."
+          value={nuevoComentario}
+          onChangeText={setNuevoComentario}
+          style={styles.input}
+          multiline
+        />
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <Pressable style={styles.botonVerde} onPress={publicarComentario}>
+    <Text style={styles.textoBotonVerde}>Comentar</Text>
+  </Pressable>
+</View>
 
     </ScrollView>
   );
@@ -501,20 +505,21 @@ const styles = StyleSheet.create({
   input: { borderWidth: 1, borderColor: "#ccc", padding: 10, borderRadius: 6, minHeight: 60 },
   error: { color: "red", textAlign: "center" },
   cargando: { padding: 20, textAlign: "center", fontSize: 16, color: "gray" },
+
   eliminarTexto: {
     color: "red",
-    textDecorationLine: "underline",
     fontSize: 12,
     marginTop: 4,
     alignSelf: "flex-start",
+    fontWeight: "bold", // opcional para que se vea más como botón
   },
 
   textoAccionAzul: {
-    color: "blue",
-    textDecorationLine: "underline",
+    color: "#007bff",
     fontSize: 12,
     marginTop: 4,
     alignSelf: "flex-start",
+    fontWeight: "bold", // opcional
   },
   
   botonVerde: {
@@ -543,18 +548,31 @@ const styles = StyleSheet.create({
 
   marcarTexto: {
     color: "#008000",
-    textDecorationLine: "underline",
     fontSize: 12,
     marginTop: 4,
     alignSelf: "flex-start",
+    fontWeight: "bold", // opcional
   },
 
   quitarRespuestaTexto: {
     color: "#cc7000", // naranja oscuro
-    textDecorationLine: "underline",
     fontSize: 12,
     marginTop: 4,
     alignSelf: "flex-start",
+    fontWeight: "bold", // opcional
   },
+
+  card: {
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    marginBottom: 20,
+  },
+
   
 });
