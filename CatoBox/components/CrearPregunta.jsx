@@ -122,8 +122,9 @@ export function CrearPregunta() {
             multiline
           />
 
-          <Text style={{ marginTop: 10, fontWeight: "bold" }}>Año:</Text>
+          <Text style={{ marginTop: 10, fontWeight: "bold" }}>Curso:</Text>
           <Picker
+<<<<<<< HEAD
           selectedValue={cursoSeleccionado}
           onValueChange={(itemValue) => {
             setCursoSeleccionado(itemValue);
@@ -133,6 +134,17 @@ export function CrearPregunta() {
         >
           <Picker.Item label="Selecciona un curso" value="" />
           {Object.entries(cursoAnios).map(([curso, anio]) => (
+=======
+            selectedValue={cursoSeleccionado}
+            onValueChange={(itemValue) => {
+              setCursoSeleccionado(itemValue);
+              const anioDetectado = cursoAnios[itemValue] || "";
+              setAnioAuto(anioDetectado);
+            }}
+          >
+            <Picker.Item label="Selecciona un curso" value="" enabled={false}/>
+            {Object.entries(cursoAnios).map(([curso, anio]) => (
+>>>>>>> e3617598b8161c324bb60a1e3c19f90b764cd3ef
             <Picker.Item
               key={curso}
               label={anio ? `${curso} (${anio}° año)` : `${curso} (General)`}
