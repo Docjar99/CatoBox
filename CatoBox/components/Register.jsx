@@ -129,7 +129,7 @@ export function Register(){
             />
             <View >
                 <TextInput
-                    style={styles.passwordInput}
+                    style={styles.input}
                     placeholder="Contraseña"
                     onChangeText={(text) => setPassword(text)}
                     value={password}
@@ -145,7 +145,7 @@ export function Register(){
             
             <View>
                 <TextInput
-                    style={styles.passwordInput}
+                    style={styles.input}
                     placeholder="Confirmar contraseña"
                     onChangeText={(text) => setConfirm(text)}
                     value={confirm}
@@ -220,6 +220,9 @@ const styles = StyleSheet.create({
     color: "red",
     textAlign: "center",
     fontSize: 14,
+  },
+  eyeButton:{
+    marginTop:6,
   },
   success: {
     color: "green",
