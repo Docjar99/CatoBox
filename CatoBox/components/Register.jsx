@@ -216,6 +216,13 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 6,
   },
+  passwordInput: {
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+    backgroundColor: "#fff",
+    padding: 8,
+    borderRadius: 6,
+  },
   error: {
     color: "red",
     textAlign: "center",
