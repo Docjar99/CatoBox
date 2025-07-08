@@ -120,7 +120,7 @@ export function CrearPregunta() {
             multiline
           />
 
-          <Text style={{ marginTop: 10, fontWeight: "bold" }}>Año:</Text>
+          <Text style={{ marginTop: 10, fontWeight: "bold" }}>Curso:</Text>
           <Picker
             selectedValue={cursoSeleccionado}
             onValueChange={(itemValue) => {
@@ -129,7 +129,7 @@ export function CrearPregunta() {
               setAnioAuto(anioDetectado);
             }}
           >
-            <Picker.Item label="Selecciona un curso" value="" />
+            <Picker.Item label="Selecciona un curso" value="" enabled={false}/>
             {Object.entries(cursoAnios).map(([curso, anio]) => (
             <Picker.Item
               key={curso}

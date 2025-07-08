@@ -89,7 +89,7 @@ export function ForoU() {
           cargarPublicaciones();
         }}
       >
-        <Picker.Item label="Selecciona un año" value="" />
+        <Picker.Item label="Selecciona un año" value="" enabled={false}/>
         {anios.map((a) => (
           <Picker.Item label={`Año ${a}`} value={a} key={a} />
         ))}
@@ -105,7 +105,7 @@ export function ForoU() {
           cargarPublicaciones();
         }}
       >
-        <Picker.Item label="Selecciona un curso" value="" />
+        <Picker.Item label="Selecciona un curso" value="" enabled={false}/>
         {cursosFiltrados.map(([curso]) => (
           <Picker.Item label={curso} value={curso} key={curso} />
         ))}
