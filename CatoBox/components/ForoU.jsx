@@ -116,7 +116,7 @@ export function ForoU() {
           setFiltroAnio("");
           setFiltroCurso("");
         }}
-        style={{ color: "blue", textDecorationLine: "underline", marginBottom: 10 }}
+        style={{ color: "blue", textDecorationLine: "none",marginTop: 10, marginBottom: 10 }}
       >
         Limpiar filtros
       </Text>
