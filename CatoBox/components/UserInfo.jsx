@@ -94,6 +94,9 @@ export function UserInfo() {
             <Text style={styles.loading}>Cargando perfil...</Text>
           )}
         </View>
+        
+        {/*
+        
         <Text style={styles.label}>🔔 Historial de notificaciones</Text>
         {notificaciones.length > 0 ? (
           <View style={styles.notificacionesBox}>
@@ -110,8 +113,7 @@ export function UserInfo() {
           <Text style={styles.notifTexto}>No tienes notificaciones por ahora.</Text>
         )}
 
-
-
+        */}
 
         <Pressable style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutText}>Cerrar sesión</Text>
