@@ -35,14 +35,22 @@ export function ForoU() {
     ([curso, anio]) => !filtroAnio || anio === filtroAnio || curso === "General"
   );
 
-  const agruparPorAnio = (publicaciones) => {
+  const agruparPorAnio = (publicaciones = []) => {
     return publicaciones.reduce((grupo, pub) => {
-      const anio = pub.anio || "Sin año";
+      const anio = pub.anio || "General";
       if (!grupo[anio]) grupo[anio] = [];
       grupo[anio].push(pub);
       return grupo;
     }, {});
   };
+
+  const grupos = agruparPorAnio(publicaciones);
+
+  const ordenAnio = Object.keys(grupos).sort((a, b) => {
+    if (a === "General") return -1;
+    if (b === "General") return 1;
+    return parseInt(a) - parseInt(b);
+  });
 
   const cargarPublicaciones = async () => {
     let query = supabase
@@ -57,8 +65,9 @@ export function ForoU() {
 
     if (error) {
       console.error("Error al obtener publicaciones:", error);
+      setPublicaciones([]);
     } else {
-      setPublicaciones(data);
+      setPublicaciones(data || []);
     }
   };
 
@@ -116,7 +125,7 @@ export function ForoU() {
           setFiltroAnio("");
           setFiltroCurso("");
         }}
-        style={{ color: "blue", textDecorationLine: "none",marginTop: 10, marginBottom: 10 }}
+        style={{ color: "blue", textDecorationLine: "none", marginTop: 10, marginBottom: 10 }}
       >
         Limpiar filtros
       </Text>
@@ -124,10 +133,13 @@ export function ForoU() {
       {publicaciones.length === 0 ? (
         <Text style={styles.noData}>No hay publicaciones.</Text>
       ) : (
-        Object.entries(agruparPorAnio(publicaciones)).map(([anio, posts]) => (
+        ordenAnio.map((anio) => (
           <View key={anio}>
-            <Text style={styles.seccionTitulo}>Año {anio}</Text>
-            {posts.map((p) => (
+            <Text style={styles.seccionTitulo}>
+              {anio === "General" ? "General" : `Año ${anio}`}
+            </Text>
+
+            {grupos[anio].map((p) => (
               <View key={p.id_publicacionforo} style={styles.card}>
                 <Link href={`/pregunta/${p.id_publicacionforo}`}>
                   <Text style={styles.pregunta}>{p.titulo}</Text>

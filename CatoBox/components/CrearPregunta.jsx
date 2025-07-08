@@ -40,6 +40,7 @@ export function CrearPregunta() {
     "Auditoría de Sistemas": "5",
     "Seguridad Informática": "5",
     "Proyecto de Fin de Carrera": "5",
+    "General": "",
   };
   
 
@@ -53,10 +54,11 @@ export function CrearPregunta() {
       return;
     }
 
-    if (!cursoSeleccionado || !anioAuto) {
-      setError("Por favor selecciona un curso válido.");
+    if (!cursoSeleccionado) {
+      setError("Por favor selecciona un curso.");
       return;
     }
+    
     
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -122,22 +124,23 @@ export function CrearPregunta() {
 
           <Text style={{ marginTop: 10, fontWeight: "bold" }}>Año:</Text>
           <Picker
-            selectedValue={cursoSeleccionado}
-            onValueChange={(itemValue) => {
-              setCursoSeleccionado(itemValue);
-              const anioDetectado = cursoAnios[itemValue] || "";
-              setAnioAuto(anioDetectado);
-            }}
-          >
-            <Picker.Item label="Selecciona un curso" value="" />
-            {Object.entries(cursoAnios).map(([curso, anio]) => (
+          selectedValue={cursoSeleccionado}
+          onValueChange={(itemValue) => {
+            setCursoSeleccionado(itemValue);
+            const anioDetectado = cursoAnios[itemValue] || "";
+            setAnioAuto(anioDetectado);
+          }}
+        >
+          <Picker.Item label="Selecciona un curso" value="" />
+          {Object.entries(cursoAnios).map(([curso, anio]) => (
             <Picker.Item
               key={curso}
-              label={`${curso} (${anio}° año)`}
+              label={anio ? `${curso} (${anio}° año)` : `${curso} (General)`}
               value={curso}
             />
           ))}
-          </Picker>
+        </Picker>
+
 
           <Text style={{ fontWeight: "bold", marginTop: 10 }}>Año detectado:</Text>
           <TextInput
