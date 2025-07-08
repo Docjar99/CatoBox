@@ -36,7 +36,7 @@ export default function VerPregunta() {
     const obtenerPregunta = async () => {
       const { data, error } = await supabase
         .from("publicacionforo")
-        .select("id_usuario, titulo, contenido, fechapublicacion, usuario(nombres, apaterno), media_url, media_type")
+        .select("id_usuario, titulo, contenido, fechapublicacion, usuario(nombres, apaterno), media_url, media_type, anio, curso")
         .eq("id_publicacionforo", id)
         .single();
 
@@ -203,7 +203,7 @@ export default function VerPregunta() {
       setContenidoPostEditado("");
       const { data } = await supabase
         .from("publicacionforo")
-        .select("id_usuario, titulo, contenido, fechapublicacion, usuario(nombres, apaterno), media_url, media_type")
+        .select("id_usuario, titulo, contenido, fechapublicacion, usuario(nombres, apaterno), media_url, media_type, anio, curso")
         .eq("id_publicacionforo", id)
         .single();
       setPregunta(data);
